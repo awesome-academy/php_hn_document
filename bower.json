@@ -1,17 +1,24 @@
 {
-  "name": "e-docs",
+  "name": "php_hn_document",
   "description": "",
   "main": "",
   "authors": [
-    "Le Xuan Quang <quang.lxun@gmail.com>"
+    "hoanghuee <huehth99@gmail.com>"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/Quang173330/php_hn_document",
+  "homepage": "https://github.com/hoanghuee/php_hn_document",
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "font-awesome-5": "^5.15.3",
+    "jquery": "3.2.1",
+    "bootstrap": "4.3.1",
+    "particles.js": "particles-js#^2.0.0"
+  }
 }
