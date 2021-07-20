@@ -20,3 +20,4 @@ mix.js([
         'resources/css/home.css',
     ], 'public/css/style.css');
 mix.styles('resources/css/authentication.css', 'public/css/authentication.css')
+mix.styles('resources/css/user-profile.css', 'public/css/user-profile.css')
