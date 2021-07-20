@@ -25,3 +25,9 @@ Route::resource('users', 'UserController');
 
 Route::post('/follow/{id}', 'UserController@follow')->name('follow');
 Route::post('/unfollow/{id}', 'UserController@unfollow')->name('unfollow');
+
+Route::resource('documents', 'DocumentController', [
+    'as' => 'user',
+]);
+Route::get('upload', 'DocumentController@upload')->name('user.documents.upload');
+Route::post('upload', 'DocumentController@storeUpload')->name('user.documents.storeUpload');
