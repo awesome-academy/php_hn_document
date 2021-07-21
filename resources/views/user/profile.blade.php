@@ -1,11 +1,28 @@
-@extends('layouts.app')
+@extends('user.layouts.master')
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/user-profile.css') }}">
 @endsection
 
 @section('content')
-    <div class="container">
+    <nav>
+        <div class="container">
+            <div class="row">
+                <div class="bc-icons-2">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb lighten-4">
+                            <li class="breadcrumb-item">
+                                <a class="text-black-50" href="">@lang('home.profile')</a>
+                                <i class="fas fa-angle-double-right mx-2" aria-hidden="true"></i>
+                                <a class="text-black-50" href="">@lang('home.view_profile')</a>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container custom">
         <div class="row gutters">
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
                 <div class="card h-100">

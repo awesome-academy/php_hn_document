@@ -11,17 +11,22 @@
                     <div class="header_search">
                         <div class="header_search_content">
                             <div class="header_search_form_container">
-                                <form action="#" class="header_search_form clearfix">
-                                    <input type="search" required="required" class="header_search_input" placeholder="@lang('home.search')">
+                                <form action="" class="header_search_form clearfix">
+                                    <input type="search" required="required" class="header_search_input"
+                                        placeholder="@lang('home.search')">
                                     <div class="custom_dropdown">
                                         <div class="custom_dropdown_list">
-                                            <span class="custom_dropdown_placeholder clc">@lang('home.categories')</span><i class="fas fa-chevron-down"></i>
+                                            <span
+                                                class="custom_dropdown_placeholder clc">@lang('home.categories')</span><i
+                                                class="fas fa-chevron-down"></i>
                                             <ul class="custom_list clc">
-                                                <li><a class="clc" href="#">@lang('home.categories')</a></li>
+                                                <li><a class="clc" href="">@lang('home.categories')</a></li>
                                             </ul>
                                         </div>
                                     </div>
-                                        <button type="submit" class="header_search_button trans_300" value="Submit"><img src="{{ asset(config('web.search')) }}" alt=""></button>
+                                    <button type="submit" class="header_search_button trans_300" value="Submit">
+                                        <i class="text-white fas fa-search"></i>
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -31,52 +36,94 @@
                     <div class="wishlist_cart d-flex flex-row align-items-center justify-content-end">
                         <div class="top_bar_menu">
                             <ul class="standard_dropdown top_bar_dropdown">
-                                <li> <a href="#">@lang('home.en')<i class="fas fa-chevron-down"></i></a>
+                                <li>
+                                    <a href="">
+                                        @if (App::isLocale(Config::get('user.en')))
+                                            @lang('home.en')
+                                        @else
+                                            @lang('home.vi')
+                                        @endif
+                                        <i class="fas fa-chevron-down"></i>
+                                    </a>
                                     <ul>
-                                        <li><a href="#">@lang('home.vi')</a></li>
+                                        @if (App::isLocale(Config::get('user.en')))
+                                            <li>
+                                                <a
+                                                    href="{{ route('change-language', ['locale' => Config::get('user.vi')]) }}">
+                                                    @lang('home.vi')
+                                                </a>
+                                            </li>
+                                        @else
+                                            <li>
+                                                <a
+                                                    href="{{ route('change-language', ['locale' => Config::get('user.en')]) }}">
+                                                    @lang('home.en')
+                                                </a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </li>
                             </ul>
                         </div>
                         <div class="top_bar_content ml-auto">
                             <div class="wishlist_content">
-                                <div class="wishlist_text"><a href="#"><i class="fas fa-upload"></i>@lang('home.upload')</a></div>
+                                <div class="wishlist_text">
+                                    <a href="">
+                                        <i class="fas fa-upload"></i>@lang('home.upload')
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="top_bar_content ml-auto">
-                            <div class="top_bar_user">
-                                <div class="user_icon"><img src="{{ asset(config('web.user')) }}" alt=""></div>
-                                <div><a href="#">@lang('home.register')</a></div>
-                                <div><a href="#">@lang('home.sign_in')</a></div>
+                        @if (!Auth::check())
+                            <div class="top_bar_content ml-auto">
+                                <div class="wishlist_content">
+                                    <div class="wishlist_text">
+                                        <a href="{{ route('register') }}">@lang('home.register')</a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div class="top_bar_content ml-auto">
+                                <div class="wishlist_content">
+                                    <div class="wishlist_text">
+                                        <a href="{{ route('login') }}">@lang('home.sign_in')</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="top_bar_content ml-auto">
+                                <div class="wishlist_content">
+                                    <ul class="standard_dropdown top_bar_dropdown">
+                                        <li>
+                                            <a href="">@lang('home.profile')<i class="fas fa-chevron-down"></i></a>
+                                            <ul>
+                                                <li>
+                                                    <a
+                                                        href="{{ route('users.show', ['user' => Auth::user()->id]) }}">@lang('home.view_profile')</a>
+                                                </li>
+                                                <li>
+                                                    <a
+                                                        href="{{ route('users.edit', ['user' => Auth::user()->id]) }}">@lang('home.edit_profile')</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">@lang('home.list_documents')</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="top_bar_content ml-auto">
+                                <div class="wishlist_content">
+                                    <form action="{{ route('logout') }}" method="post">
+                                        @csrf
+                                        <input id="logout-input" class="btn mt-10" type="submit" value=@lang('home.logout')>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <nav class="main_nav">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="main_nav_content d-flex flex-row">
-                        <div class="main_nav_menu">
-                            <ul class="standard_dropdown main_nav_dropdown">
-                                <li><a href="#">@lang('home.home')<i class="fas fa-chevron-down"></i></a></li>
-                                <li class="hassubs"><a href="#">@lang('home.home')<i class="fas fa-chevron-down"></i></a>
-                                    <ul>
-                                        <li><a href="#">@lang('home.home')<i class="fas fa-chevron-down"></i></a>
-                                            <ul>
-                                                <li><a href="#">@lang('home.home')<i class="fas fa-chevron-down"></i></a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
 </header>

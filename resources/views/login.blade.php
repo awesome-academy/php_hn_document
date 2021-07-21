@@ -1,10 +1,26 @@
-@extends('layouts.app')
+@extends('user.layouts.master')
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/authentication.css') }}">
 @endsection
 
 @section('content')
+    <nav>
+        <div class="container">
+            <div class="row">
+                <div class="bc-icons-2">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb lighten-4">
+                            <li class="breadcrumb-item">
+                                <a class="text-black-50" href="">@lang('authen.login')</a>
+                                <i class="fas fa-angle-double-right mx-2" aria-hidden="true"></i>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </nav>
     <div class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
         <div class="card card0 border-0">
             <div class="row d-flex">
@@ -20,13 +36,13 @@
                         <div class="row mb-4 px-3">
                             <h6 class="mb-0 mr-4 mt-2">@lang('authen.signin')</h6>
                             <div class="facebook text-center mr-3">
-                                <div class="fa fa-facebook"></div>
+                                <i class="fab fa-facebook-f"></i>
                             </div>
                             <div class="twitter text-center mr-3">
-                                <div class="fa fa-twitter"></div>
+                                <i class="fab fa-twitter"></i>
                             </div>
                             <div class="linkedin text-center mr-3">
-                                <div class="fa fa-linkedin"></div>
+                                <i class="fab fa-linkedin-in"></i>
                             </div>
                         </div>
                         <div class="row px-3 mb-4">
@@ -45,7 +61,7 @@
                                         </span>
                                     @enderror
                                 </label>
-                                <input class="mb-4" type="email" name="email" placeholder=@lang('authen.email_input')>
+                                <input class="mb-4" type="email" name="email" placeholder="@lang('authen.email_input')">
                             </div>
                             <div class="row px-3">
                                 <label class="mb-1">
@@ -56,14 +72,14 @@
                                         </span>
                                     @enderror
                                 </label>
-                                <input type="password" name="password" placeholder=@lang('authen.password_input')>
+                                <input type="password" name="password" placeholder="@lang('authen.password_input')">
                             </div>
                             <div class="row px-3 mb-4">
                                 <div class="custom-control custom-checkbox custom-control-inline">
                                     <input id="chk1" type="checkbox" name="remember" class="custom-control-input">
                                     <label for="chk1" class="custom-control-label text-sm">@lang('authen.remember')</label>
                                 </div>
-                                <a href="#" class="ml-auto mb-0 text-sm">@lang('authen.forgot')</a>
+                                <a href="" class="ml-auto mb-0 text-sm">@lang('authen.forgot')</a>
                             </div>
                             <div class="row mb-3 px-3">
                                 <button type="submit" class="btn btn-blue text-center">@lang('authen.login')</button>

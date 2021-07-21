@@ -6,4 +6,6 @@ return [
     'upload' => 10,
     'confirm' => 'working',
     'role_user' => 'user',
+    'en' => 'en',
+    'vi' => 'vi',
 ];

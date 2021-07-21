@@ -1,10 +1,26 @@
-@extends('layouts.app')
+@extends('user.layouts.master')
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/authentication.css') }}">
 @endsection
 
 @section('content')
+    <nav>
+        <div class="container">
+            <div class="row">
+                <div class="bc-icons-2">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb lighten-4">
+                            <li class="breadcrumb-item">
+                                <a class="text-black-50" href="">@lang('authen.register')</a>
+                                <i class="fas fa-angle-double-right mx-2" aria-hidden="true"></i>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </nav>
     <div class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
         <div class="card card0 border-0">
             <div class="row d-flex">
@@ -43,7 +59,7 @@
                                         <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
                                     @enderror
                                 </label>
-                                <input class="mb-4" type="email" name="email" placeholder=@lang('authen.email_input')>
+                                <input class="mb-4" type="email" name="email" placeholder="@lang('authen.email_input')">
                             </div>
                             <div class="row px-3">
                                 <label class="mb-1">
@@ -52,7 +68,7 @@
                                         <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
                                     @enderror
                                 </label>
-                                <input class="mb-4" type="text" name="name" placeholder=@lang('authen.name_input')>
+                                <input class="mb-4" type="text" name="name" placeholder="@lang('authen.name_input')">
                             </div>
                             <div class="row px-3">
                                 <label class="mb-1">
@@ -61,7 +77,8 @@
                                         <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
                                     @enderror
                                 </label>
-                                <input class="mb-4" type="password" name="password" placeholder=@lang('authen.password_input')>
+                                <input class="mb-4" type="password" name="password"
+                                    placeholder="@lang('authen.password_input')">
                             </div>
                             <div class="row px-3">
                                 <label class="mb-1">
@@ -70,7 +87,8 @@
                                     @enderror
                                     <h6 class="mb-0 text-sm label">@lang('authen.confirm_password')</h6>
                                 </label>
-                                <input type="password" name="password_confirmation" placeholder=@lang('authen.confirm_password_input')>
+                                <input type="password" name="password_confirmation"
+                                    placeholder="@lang('authen.confirm_password_input')">
                             </div>
                             <div class="row mb-3 px-3">
                                 <button type="submit" class="btn btn-blue text-center">@lang('authen.register')</button>
