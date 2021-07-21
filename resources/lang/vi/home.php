@@ -54,5 +54,10 @@ return [
     'about' => 'Về chúng tôi',
     'link' => 'Liên kết nhanh',
     'contact' => 'Liên hệ',
-    'copy' => 'Copyright &copy; 2021 All rights reserved.'
+    'copy' => 'Copyright &copy; 2021 All rights reserved.',
+    'profile' => 'Trang cá nhân',
+    'view_profile' => 'Xem trang cá nhân',
+    'edit_profile' => 'Chỉnh sửa trang cá nhân',
+    'list_documents' => 'Danh sách tài liệu',
+    'logout' => 'Đăng xuất',
 ];

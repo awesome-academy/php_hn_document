@@ -54,5 +54,10 @@ return [
     'about' => 'About',
     'link' => 'Links',
     'contact' => 'Contact us',
-    'copy' => 'Copyright &copy; 2021 All rights reserved.'
+    'copy' => 'Copyright &copy; 2021 All rights reserved.',
+    'profile' => 'Profile',
+    'view_profile' => 'View profile',
+    'edit_profile' => 'Edit Profile',
+    'list_documents' => 'List Documents',
+    'logout' => 'Logout',
 ];
