@@ -8,6 +8,14 @@ use App\Models\Category;
 
 class Document extends Model
 {
+    protected $fillable = [
+        'name',
+        'description',
+        'url',
+        'category_id',
+        'user_id',
+    ];
+
     public function downloads()
     {
         return $this->belongsToMany(User::class, 'downloads')->withTimestamps();

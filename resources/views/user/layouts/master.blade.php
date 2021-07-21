@@ -29,7 +29,11 @@
     @yield('content')
 
     @include('user.layouts.footer')
-    
+
     <script src="{{ asset('bower_components/particles.js/particles.min.js') }}"></script>
+
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+
+    @stack('scripts')
+
 </body>
