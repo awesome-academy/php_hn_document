@@ -21,3 +21,6 @@ mix.js([
     ], 'public/css/style.css');
 mix.styles('resources/css/authentication.css', 'public/css/authentication.css')
 mix.styles('resources/css/user-profile.css', 'public/css/user-profile.css')
+mix.styles('resources/css/list-docs.css', 'public/css/list-docs.css')
+mix.styles('resources/css/upload.css', 'public/css/upload.css')
+mix.js('resources/js/upload.js', 'public/js/upload.js')
