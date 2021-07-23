@@ -1,10 +1,43 @@
 @extends('user.layouts.master')
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/upload.css') }}">
+@endsection
+
 @section('content')
-    <form action={{ route('user.documents.storeUpload') }} method="POST" enctype="multipart/form-data">
-        @method('post')
-        @csrf
+    <nav>
         <div class="container">
+            <div class="row">
+                <div class="bc-icons-2">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb lighten-4">
+                            <li class="breadcrumb-item">
+                                <a class="text-black-50" href="">@lang('uploads.upload')</a>
+                                <i class="fas fa-angle-double-right mx-2" aria-hidden="true"></i>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        @if ($message = Session::get('success'))
+        <div class="alert alert-success alert-block">
+            <button type="button" class="close" data-dismiss="alert"><i class="fas fa-times"></i></button>
+            <strong>{{ $message }}</strong>
+        </div>
+        @endif
+
+        @if ($message = Session::get('error'))
+        <div class="alert alert-danger alert-block">
+            <button type="button" class="close" data-dismiss="alert"><i class="fas fa-times"></i></button>
+            <strong>{{ $message }}</strong>
+        </div>
+        @endif
+        <form action={{ route('user.documents.storeUpload') }} method="POST" enctype="multipart/form-data">
+            @method('post')
+            @csrf
             <div class="row it">
                 <div class="col-sm-offset-1 col-sm-10" id="one">
                     <div class="row">
@@ -21,14 +54,21 @@
                                 @enderror
                                 <div class="fileUpload btn btn-orange">
                                     <img src="{{ asset('images/web/file.svg') }}" class="icon">
-                                    <span class="upl" id="upload">@lang('uploads.documents')</span>
-                                    <input name="file" type="file" class="upload up" id="up" onchange="readURL(this);" required>
+                                    <span class="upl" id="upload">@lang('uploads.document')</span>
+                                    <input name="file" type="file" class="upload up" id="up" required>
                                 </div>
                                 <p>
-                                    @lang('uploads.supported')
+                                @lang('uploads.supported')
                                 </p>
                             </div>
                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">@lang('uploads.category'):</label>
+                                    <select class="form-control" name="category" id="category">
+                                        <option value="">@lang('uploads.select_category')</option>
+                                        @include('user.documents.category_options', ['level' => 0])
+                                    </select>
+                                </div>
                                 <div class="form-group">
                                     @error('name')
                                     <div class="text-danger">{{ $message }}</div>
@@ -51,8 +91,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 @endsection
 
 @push('scripts')

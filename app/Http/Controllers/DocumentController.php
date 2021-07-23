@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentRequest;
+use App\Models\Category;
 use App\Models\Document;
+use App\Models\User;
 use Faker\Core\File;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
-use Imagick;
 
 class DocumentController extends Controller
 {
@@ -96,41 +98,54 @@ class DocumentController extends Controller
 
     public function upload()
     {
-        return view('user.documents.upload');
+        $categories = Category::with('childCategories')
+            ->where('parent_id', '=', config('uploads.category_root'))
+            ->get();
+
+        return view('user.documents.upload', compact('categories'));
     }
 
     public function storeUpload(DocumentRequest $request)
     {
-        $file = $request->file('file');
-        $url = $file->getClientOriginalName();
-        $document = new Document();
-        $userId = Auth::id();
-        $attributes = [
-            'name' => $request->get('name'),
-            'description' => $request->get('description'),
-            'url' => $url,
-            'user_id' => $userId,
-        ];
-        $coverPath = 'uploads/cover/' . $url . config('cover_type');
-        $document->create($attributes);
-        $this->saveFile($file);
-        $this->genPdfThumbnail($file, $coverPath);
+        $user = Auth::user();
+        if ($user->upload <= 0) {
+            $message = __('uploads.expired_times');
 
-        return redirect()->route('home');
+            return back()->with('error', $message);
+        } else {
+            $file = $request->file('file');
+            $filename = $file->getClientOriginalName();
+            $document = new Document();
+            $category = ($request->category == '') ? config('uploads.category_root') : $request->category;
+            $url = $this->saveFile($file);
+            $attributes = [
+                'name' => $request->name,
+                'description' => $request->description,
+                'url' => $url . $filename,
+                'user_id' => $user->id,
+                'category_id' => $category,
+            ];
+            $document->create($attributes);
+            $upload = $user->upload - 1;
+            $coin = $user->coin + 10;
+            $user->update([
+                'upload' => $upload,
+                'coin' => $coin,
+            ]);
+            $message = __('uploads.success');
+
+            return back()->with('success', $message);
+        }
     }
 
     public function saveFile(UploadedFile $file)
     {
         $filename = $file->getClientOriginalName();
-        $path = pathinfo($filename, PATHINFO_EXTENSION);
-        $file->storeAs('uploads/' . $path . '/', $filename);
-    }
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $path = 'uploads/' . $extension . '/';
+        $file->storeAs($path, $filename);
 
-    public function genPdfThumbnail($file, $target)
-    {
-        $imgExt = new Imagick();
-        $imgExt->readImage($file . "[0]");
-        $imgExt->writeImages($target, true);
+        return $path;
     }
 
     public function search(Request $request)
