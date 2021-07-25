@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentRequest;
 use App\Models\Category;
+use App\Http\Requests\CommentRequest;
 use App\Models\Document;
 use App\Models\User;
 use Faker\Core\File;
@@ -56,7 +57,11 @@ class DocumentController extends Controller
      */
     public function show($id)
     {
-        //
+        $document = Document::findOrFail($id);
+        $author = $document->uploadBy;
+        $comments = $document->comments()->orderBy('comments.created_at', 'desc')->get();
+
+        return view('user.documents.show', compact('document', 'author', 'comments'));
     }
 
     /**
@@ -171,5 +176,43 @@ class DocumentController extends Controller
         $userLogin->favorites()->detach($document);
 
         return redirect()->route('user.documents.index');
+    }
+
+    public function download($id)
+    {
+        $document = Document::findOrFail($id);
+        $author = $document->uploadBy;
+        $user = Auth::user();
+        if ($user->id != $author->id) {
+            if ($user->download_free >= config('user.download_free')) {
+                $download_free = $user->dowload_free - config('user.download_free');
+                $user->update([
+                    'download_free' => $download_free
+                ]);
+            } elseif ($user->coin >= config('user.coin_least')) {
+                $coin = $user->coin - config('user.coin_least');
+                $user->update([
+                    'coin' => $coin
+                ]);
+            } else {
+                return redirect()->route('buy-coin');
+            }
+            $user->downloads()->attach($document);
+            $coin = $author->coin + config('user.coin_author');
+            $author->update([
+                'coin' => $coin
+            ]);
+        }
+
+        return response()->download(public_path('uploads/pdf/' . $document->url), $document->name);
+    }
+
+    public function comment(CommentRequest $request, $id)
+    {
+        $document = Document::findOrFail($id);
+        $user = Auth::user();
+        $user->comments()->attach($document, ['content' => $request->comment]);
+
+        return redirect()->route('user.documents.show', ['document' => $document->id]);
     }
 }
