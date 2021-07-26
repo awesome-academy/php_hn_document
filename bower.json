@@ -19,6 +19,8 @@
     "font-awesome-5": "^5.15.3",
     "jquery": "3.2.1",
     "bootstrap": "4.3.1",
-    "particles.js": "particles-js#^2.0.0"
+    "particles.js": "particles-js#^2.0.0",
+    "startbootstrap-sb-admin": "^4.1.4",
+    "bootstrap-sweetalert": "^1.0.1"
   }
 }

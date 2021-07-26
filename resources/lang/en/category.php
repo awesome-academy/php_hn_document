@@ -1,0 +1,22 @@
+<?php
+return [
+    'choose_parent' => 'Choose parent category',
+    'select_parent' => 'Select category',
+    'create_success' => 'New category is created successfully',
+    'list' => 'Category List',
+    'name' => 'Name',
+    'id' => 'ID',
+    'parent' => 'Category parent',
+    'type_name' => 'Type name of category',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'root' => 'Root',
+    'created' => 'Created at',
+    'updated' => 'Updated at',
+    'delete_success' => 'The category is deleted successfully',
+    'delete_children' => 'The category has children, Do you really to delete?',
+    'error' => 'Error!',
+    'delete_error' => 'Can not delete it!',
+    'success' => 'Success',
+    'update_success' => 'The category is updated successfully',
+];
