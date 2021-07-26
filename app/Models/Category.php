@@ -7,6 +7,11 @@ use App\Models\Document;
 
 class Category extends Model
 {
+    protected $fillable = [
+        'name',
+        'parent_id',
+    ];
+
     public function documents()
     {
         return $this->hasMany(Document::class);
