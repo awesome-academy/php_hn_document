@@ -11,16 +11,19 @@ return [
     |
     */
 
+    'upload' => 'Upload',
     'header' => 'Document information',
     'image_file' => 'File Upload',
     'select_file' => 'Select Document To Upload',
-    'supported' => 'Supported file types: pdf, txt, doc, ppt, xls, docx, and more',
+    'supported' => 'Supported file types: pdf, docx, rtf, jpeg, png, txt',
     'invalid' => 'Please upload valid file',
     'document' => 'Upload document',
     'title' => 'Title',
     'required' => 'Required',
     'description' => 'Description',
-    'new' => 'Add new',
-    'done' => 'Done',
-    'least' => 'You have to upload at least one document.'
+    'done' => 'Upload',
+    'category' => 'Choose category:',
+    'select_category' => 'Select category',
+    'expired_times' => 'Your upload times has expired this month.',
+    'success' => 'Your document is uploaded successfully',
 ];

@@ -1,42 +1,57 @@
-var fileTypes = ['pdf', 'docx', 'rtf', 'jpg', 'jpeg', 'png', 'txt'];
-function readURL(input) {
-    if (input.files && input.files[0]) {
-        var extension = input.files[0].name.split('.').pop().toLowerCase(),
+var fileTypes = ['pdf', 'docx', 'rtf', 'jpeg', 'png', 'txt'];
+
+$("#up").change(function () {
+    if (this.files && this.files[0]) {
+        var extension = this.files[0].name.split('.').pop().toLowerCase(),
             isSuccess = fileTypes.indexOf(extension) > -1;
         if (isSuccess) {
             var reader = new FileReader();
             reader.onload = function (e) {
                 switch (extension) {
                     case 'pdf':
-                        $(input).closest('.fileUpload').find(".icon").attr('src', 'images/web/file_pdf.svg');
+                        $("#up").closest('.fileUpload').find(".icon").attr('src', 'images/web/file_pdf.svg');
                         break;
                     case 'docx':
-                        $(input).closest('.fileUpload').find(".icon").attr('src', 'images/web/file_doc.svg');
+                        $("#up").closest('.fileUpload').find(".icon").attr('src', 'images/web/file_doc.svg');
                         break;
                     case 'rtf':
-                        $(input).closest('.fileUpload').find(".icon").attr('src', 'images/web/file_rtf.svg');
+                        $("#up").closest('.fileUpload').find(".icon").attr('src', 'images/web/file_rtf.svg');
                         break;
                     case 'png':
-                        $(input).closest('.fileUpload').find(".icon").attr('src', 'images/web/file_png.svg');
+                        $("#up").closest('.fileUpload').find(".icon").attr('src', 'images/web/file_png.svg');
                         break;
-                    case 'jpg':
-                        $(input).closest('.fileUpload').find(".icon").attr('src', 'images/web/file_jpg.svg');
+                    case 'jpeg':
+                        $("#up").closest('.fileUpload').find(".icon").attr('src', 'images/web/file_jpg.svg');
                         break;
                     case 'txt':
-                        $(input).closest('.fileUpload').find(".icon").attr('src', 'images/web/file_txt.svg');
+                        $("#up").closest('.fileUpload').find(".icon").attr('src', 'images/web/file_txt.svg');
                         break;
                     default:
-                        $(input).closest('.uploadDoc').find(".docErr").fadeIn();
+                        $("#up").closest('.uploadDoc').find(".docErr").fadeIn();
                         break;
                 }
             }
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(this.files[0]);
         } else {
-            input.value = '';
-            $(input).closest('.uploadDoc').find(".docErr").fadeIn();
+            this.value = '';
+            $("#up").closest('.uploadDoc').find(".docErr").fadeIn();
             setTimeout(function () {
                 $('.docErr').fadeOut('slow');
             }, 3000);
         }
     }
-}
+})
+
+$(document).on('change', '#up', function () {
+    var id = $(this).attr('id');
+    var profilePicValue = $(this).val();
+    var fileNameStart = profilePicValue.lastIndexOf('\\');
+    profilePicValue = profilePicValue.substr(fileNameStart + 1).substring(0, 20);
+    if (profilePicValue != '') {
+        $(this).closest('.fileUpload').find('.upl').html(profilePicValue);
+    }
+});
+
+$(".close").click(function () {
+    $(".alert").slideUp();
+});
