@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\PaymentRequest;
+use App\Models\Receipt;
 
 class UserController extends Controller
 {
@@ -87,9 +89,10 @@ class UserController extends Controller
         $avatar = $request->avatar;
         if (isset($avatar)) {
             $url = cloudinary()->upload($avatar->getRealPath())->getSecurePath();
-            $user->image = $url;
+            $user->update([
+                'image' => $url
+            ]);
         }
-        $user->save();
 
         return redirect()->route('users.show', ['user' => $user->id]);
     }
@@ -119,6 +122,28 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $userLogin = Auth::user();
         $userLogin->followings()->detach($user->id);
+
+        return redirect()->route('users.show', ['user' => $user->id]);
+    }
+
+    public function buyCoin()
+    {
+        return view('user.buy-coin');
+    }
+
+    public function payment(PaymentRequest $request)
+    {
+        $value = $request->value;
+        $quantity = $request->quantity;
+        $user = Auth::user();
+        $user->update([
+            'coin' => $user->coin + $value * $quantity
+        ]);
+        Receipt::create([
+            'value' => $value,
+            'quantity' => $quantity,
+            'user_id' => $user->id,
+        ]);
 
         return redirect()->route('users.show', ['user' => $user->id]);
     }

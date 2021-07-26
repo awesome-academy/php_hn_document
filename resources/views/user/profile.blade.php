@@ -109,6 +109,18 @@
                                 <div class="col-sm-9 text-secondary">{{ $user->upload }}</div>
                             </div>
                             <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">@lang('user.coin')</h6>
+                                </div>
+                                <div class="col-sm-5 text-secondary">{{ $user->coin }}</div>
+                                <div class="col-sm-4 text-right">
+                                    <a type="button" class="btn btn-primary" href={{ route('buy-coin') }}>
+                                        @lang('user.buy-coin')
+                                    </a>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="row gutters">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="text-right">

@@ -31,6 +31,10 @@ Route::group(['middleware' => 'localization'], function () {
     Route::post('search', 'DocumentController@search')->name('documents.search');
     Route::post('mark/{id}', 'DocumentController@mark')->name('documents.mark');
     Route::post('unmark/{id}', 'DocumentController@unmark')->name('documents.unmark');
+    Route::post('download/{id}', 'DocumentController@download')->name('documents.download');
+    Route::get('/user/buycoin', 'UserController@buyCoin')->name('buy-coin');
+    Route::get('/payment', 'UserController@payment')->name('payment');
+    Route::post('comment/{id}', 'DocumentController@comment')->name('documents.comment');
 });
 
 Route::get('change-language/{locale}', 'HomeController@changeLanguage')->name('change-language');
