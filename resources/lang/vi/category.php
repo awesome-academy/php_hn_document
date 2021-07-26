@@ -1,0 +1,22 @@
+<?php
+return [
+    'choose_parent' => 'Chọn danh mục cha',
+    'select_parent' => 'Chọn danh mục',
+    'create_success' => 'Danh mục mới được tạo thành công',
+    'list' => 'Danh sách danh mục',
+    'name' => 'Tên',
+    'id' => 'ID',
+    'parent' => 'Danh mục cha',
+    'type_name' => 'Nhập tên của danh mục',
+    'edit' => 'Sửa',
+    'delete' => 'Xóa',
+    'root' => 'Gốc',
+    'created' => 'Được tạo lúc',
+    'updated' => 'Cập nhật lúc',
+    'delete_success' => 'Danh mục đã được xóa thành công',
+    'delete_children' => 'Danh mục có chứa danh mục con, Bạn có thực sự muốn xóa?',
+    'error' => 'Lỗi!',
+    'delete_error' => 'Không thể xóa danh mục này!',
+    'success' => 'Thành công',
+    'update_success' => 'Danh mục được cập nhật thành công!',
+];
