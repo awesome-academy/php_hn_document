@@ -1,6 +1,10 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
+    "/js/delete_category.js": "/js/delete_category.js",
+    "/js/upload.js": "/js/upload.js",
+    "/css/style.css": "/css/style.css",
     "/css/authentication.css": "/css/authentication.css",
-    "/css/style.css": "/css/style.css"
+    "/css/user-profile.css": "/css/user-profile.css",
+    "/css/list-docs.css": "/css/list-docs.css",
+    "/css/upload.css": "/css/upload.css"
 }
