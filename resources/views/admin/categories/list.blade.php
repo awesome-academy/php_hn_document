@@ -61,6 +61,7 @@
                                 </td>
                                 <td>
                                     <button type="submit" class="btn btn-danger btnDelete" >
+                                        <input id="url" type="hidden" value="{{ route('admin.categories.destroy', ['category' => $category->id]) }}">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
