@@ -14,6 +14,7 @@
     <link href="{{ asset('bower_components/startbootstrap-sb-admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('bower_components/startbootstrap-sb-admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('bower_components/bootstrap-sweetalert/dist/sweetalert.css') }}">
+    @yield('css')
 </head>
 
 <body id="page-top">
@@ -53,5 +54,8 @@
     <script src="{{ asset('bower_components/startbootstrap-sb-admin/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <script src="{{ asset('bower_components/startbootstrap-sb-admin/js/sb-admin-2.min.js') }}"></script>
     <script src="{{ asset('bower_components/bootstrap-sweetalert/dist/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('bower_components/validate/validate.min.js') }}"></script>
+    <script src="{{ asset('bower_components/underscore/underscore-min.js') }}"></script>
+    <script src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
     @yield('js')
 </body>

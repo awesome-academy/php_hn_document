@@ -19,8 +19,8 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">@lang('admin.option'):</h6>
-                <a class="collapse-item" href="#">@lang('admin.admin_add')</a>
-                <a class="collapse-item" href="#">@lang('admin.admin_upgrade')</a>
+                <a class="collapse-item" href="{{ route('admin.members.create') }}">@lang('admin.admin_add')</a>
+                <a class="collapse-item" href="{{ route('admin.members.index') }}">@lang('member.list')</a>
             </div>
         </div>
     </li>

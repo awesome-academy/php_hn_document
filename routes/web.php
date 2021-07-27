@@ -35,10 +35,15 @@ Route::group(['middleware' => 'localization'], function () {
     Route::get('/user/buycoin', 'UserController@buyCoin')->name('buy-coin');
     Route::get('/payment', 'UserController@payment')->name('payment');
     Route::post('comment/{id}', 'DocumentController@comment')->name('documents.comment');
-    Route::resource('/admin/categories', 'CategoryControler', [
+    Route::resource('/admin/categories', 'CategoryController', [
         'as' => 'admin',
     ]);
     Route::get('admin', 'AdminController@index')->name('admin.home');
+    Route::resource('/admin/members', 'MemberController', [
+        'as' => 'admin',
+    ]);
+    Route::post('admin/members/ban/{id}', 'MemberController@ban')->name('admin.members.ban');
+    Route::post('admin/members/upgrade/{id}', 'MemberController@upgrade')->name('admin.members.upgrade');
 });
 
 Route::get('change-language/{locale}', 'HomeController@changeLanguage')->name('change-language');
