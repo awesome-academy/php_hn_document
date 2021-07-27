@@ -6,7 +6,7 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
-class CategoryControler extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.

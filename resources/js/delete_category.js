@@ -3,6 +3,7 @@ $("#categoryTable").on('click', '.btnDelete', function (e) {
     var currentRow = $(this).closest("tr");
     var id = currentRow.find("#dataId").text();
     var hasChildren = currentRow.find("#hasChildren").val();
+    var url = currentRow.find("#url").val();
     swal({
         title: "Are you sure?",
         text: "Do you really want to delete?",
@@ -34,7 +35,7 @@ $("#categoryTable").on('click', '.btnDelete', function (e) {
                                     headers: {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    url: '/admin/categories/' + id,
+                                    url: url,
                                     type: "DELETE",
                                     data: {
                                         "_method": 'DELETE',
@@ -72,7 +73,7 @@ $("#categoryTable").on('click', '.btnDelete', function (e) {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        url: '/admin/categories/' + id,
+                        url: url,
                         type: "DELETE",
                         data: {
                             "_method": 'DELETE',
