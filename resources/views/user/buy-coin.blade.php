@@ -50,7 +50,8 @@
                         </div>
                         <div class="tab-content">
                             <div id="credit-card" class="tab-pane fade show active pt-3">
-                                <form role="form" action="{{ route('payment') }}">
+                                <form role="form" action="{{ route('payment') }} " method="POST">
+                                    @csrf
                                     <div class="form-group">
                                         <label for="username">
                                             <h6>@lang('user.coin_value')</h6>

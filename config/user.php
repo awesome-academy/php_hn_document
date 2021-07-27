@@ -11,6 +11,7 @@ return [
     'vi' => 'vi',
     'download_free_least' => 1,
     'document_url' => 'uploads/',
+    'download_free_least' => 1,
     'coin_least' => 10,
     'coin_author' => 1,
     'min_quantity' => 1,

@@ -26,14 +26,18 @@ Route::group(['middleware' => 'localization'], function () {
         'as' => 'user',
     ]);
     Route::get('upload', 'DocumentController@upload')
-    ->name('user.documents.upload')->middleware('auth');
-    Route::post('upload', 'DocumentController@storeUpload')->name('user.documents.storeUpload');
+        ->name('user.documents.upload')->middleware('auth');
+    Route::post('upload', 'DocumentController@storeUpload')
+        ->name('user.documents.storeUpload')->middleware('auth');
     Route::post('search', 'DocumentController@search')->name('documents.search');
     Route::post('mark/{id}', 'DocumentController@mark')->name('documents.mark');
     Route::post('unmark/{id}', 'DocumentController@unmark')->name('documents.unmark');
-    Route::post('download/{id}', 'DocumentController@download')->name('documents.download');
-    Route::get('/user/buycoin', 'UserController@buyCoin')->name('buy-coin');
-    Route::get('/payment', 'UserController@payment')->name('payment');
+    Route::post('download/{id}', 'DocumentController@download')
+        ->name('documents.download')->middleware('auth');
+    Route::get('/user/buycoin', 'UserController@buyCoin')
+        ->name('buy-coin')->middleware('auth');
+    Route::post('/payment', 'UserController@payment')
+        ->name('payment')->middleware('auth');
     Route::post('comment/{id}', 'DocumentController@comment')->name('documents.comment');
     Route::resource('/admin/categories', 'CategoryController', [
         'as' => 'admin',
