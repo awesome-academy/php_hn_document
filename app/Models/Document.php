@@ -35,4 +35,9 @@ class Document extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function uploadBy()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

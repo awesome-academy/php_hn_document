@@ -58,7 +58,10 @@
                                     <div class="m-widget4__item d-flex justify-content-around">
                                         <div class="m-widget4__info">
                                             <span class="m-widget4__title">
-                                                {{ $document->name }}
+                                                <a
+                                                    href="{{ route('user.documents.show', ['document' => $document->id]) }}">
+                                                    {{ $document->name }}
+                                                </a>
                                             </span>
                                             <br>
                                             <span class="m-widget4__sub">
@@ -66,9 +69,11 @@
                                             </span>
                                         </div>
                                         <div class="m-widget4__ext d-flex">
-                                            <form method="GET" action="">
-                                                <button type="submit" class=" btn btn-sm btn-warning mr-4">
-                                                    @lang('user.edit') <i class="fas fa-pencil-alt"></i>
+                                            <form action="{{ route('documents.download', ['id' => $document->id]) }}"
+                                                method="POST">
+                                                @csrf
+                                                <button type="submit" class=" btn btn-sm btn-info mr-4">
+                                                    @lang('user.download') <i class="fas fa-file-download"></i>
                                                 </button>
                                             </form>
                                             <form method="POST"
@@ -90,7 +95,10 @@
                                     <div class="m-widget4__item d-flex justify-content-around">
                                         <div class="m-widget4__info">
                                             <span class="m-widget4__title">
-                                                {{ $document->name }}
+                                                <a
+                                                    href="{{ route('user.documents.show', ['document' => $document->id]) }}">
+                                                    {{ $document->name }}
+                                                </a>
                                             </span>
                                             <br>
                                             <span class="m-widget4__sub">
@@ -101,14 +109,14 @@
                                             <form action="{{ route('documents.download', ['id' => $document->id]) }}"
                                                 method="POST">
                                                 @csrf
-                                                <button type="submit" class=" btn btn-sm btn-warning mr-4">
+                                                <button type="submit" class=" btn btn-sm btn-info mr-4">
                                                     @lang('user.download') <i class="fas fa-file-download"></i>
                                                 </button>
                                             </form>
                                             <form method="POST"
                                                 action="{{ route('documents.unmark', ['id' => $document->id]) }}">
                                                 @csrf
-                                                <button type="submit" class=" btn btn-sm btn-danger">
+                                                <button type="submit" class=" btn btn-sm btn-info">
                                                     @lang('user.unsave')<i class="far fa-bookmark"></i>
                                                 </button>
                                             </form>

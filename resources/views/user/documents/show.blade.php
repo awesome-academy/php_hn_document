@@ -43,9 +43,11 @@
                         </button>
                     </form>
                     @if ($author->id == Auth::id())
-                        <form method="GET" action="">
-                            <button type="submit" class=" btn btn-sm btn-warning mr-4">
-                                @lang('user.edit') <i class="fas fa-pencil-alt"></i>
+                        <form method="POST" action="{{ route('user.documents.destroy', ['document' => $document->id]) }}">
+                            @csrf
+                            @method('delete')
+                            <button type="submit" class=" btn btn-sm btn-danger">
+                                @lang('user.delete') <i class="far fa-trash-alt"></i>
                             </button>
                         </form>
                     @elseif (Auth::user()->favorites->contains($document))
@@ -63,9 +65,8 @@
                             </button>
                         </form>
                     @endif
-
                 </div>
-                <iframe src="{{ asset('uploads/pdf/' . $document->url) }}" scrolling="auto" frameborder="0"></iframe>
+                <iframe src="{{ asset($document->url) }}" scrolling="auto" frameborder="0" class="mx-auto mt-4"></iframe>
             </div>
             <div class="col-md-9 col-sm-12 mx-auto my-5">
                 <div class="comment-wrapper">
@@ -81,7 +82,7 @@
                                     <span class="invalid-feedback d-block mt-0 mb-2" role="alert">{{ $message }}</span>
                                 @enderror
                                 <textarea class="form-control" name="comment" placeholder="@lang('user.comment_input')"
-                                    rows="3" ></textarea>
+                                    rows="3"></textarea>
                                 <br>
                                 <input type="submit" class="btn btn-info float-right" value="@lang('user.post')">
                             </form>
@@ -105,7 +106,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

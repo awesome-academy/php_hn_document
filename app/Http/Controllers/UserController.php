@@ -71,8 +71,9 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-
-        return view('user.edit-profile', compact('user'));
+        if ($this->authorize('update', $user)) {
+            return view('user.edit-profile', compact('user'));
+        }
     }
 
     /**
@@ -85,16 +86,18 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, $id)
     {
         $user = User::findOrFail($id);
-        $user->update($request->all());
-        $avatar = $request->avatar;
-        if (isset($avatar)) {
-            $url = cloudinary()->upload($avatar->getRealPath())->getSecurePath();
-            $user->update([
-                'image' => $url
-            ]);
-        }
+        if ($this->authorize('update', $user)) {
+            $user->update($request->all());
+            $avatar = $request->avatar;
+            if (isset($avatar)) {
+                $url = cloudinary()->upload($avatar->getRealPath())->getSecurePath();
+                $user->update([
+                    'image' => $url
+                ]);
+            }
 
-        return redirect()->route('users.show', ['user' => $user->id]);
+            return redirect()->route('users.show', ['user' => $user->id]);
+        }
     }
 
     /**
@@ -111,19 +114,23 @@ class UserController extends Controller
     public function follow($id)
     {
         $user = User::findOrFail($id);
-        $userLogin = Auth::user();
-        $userLogin->followings()->attach($user->id);
+        if ($this->authorize('follow', $user)) {
+            $userLogin = Auth::user();
+            $userLogin->followings()->attach($user->id);
 
-        return redirect()->route('users.show', ['user' => $user->id]);
+            return redirect()->route('users.show', ['user' => $user->id]);
+        }
     }
 
     public function unfollow($id)
     {
         $user = User::findOrFail($id);
-        $userLogin = Auth::user();
-        $userLogin->followings()->detach($user->id);
+        if ($this->authorize('follow', $user)) {
+            $userLogin = Auth::user();
+            $userLogin->followings()->detach($user->id);
 
-        return redirect()->route('users.show', ['user' => $user->id]);
+            return redirect()->route('users.show', ['user' => $user->id]);
+        }
     }
 
     public function buyCoin()

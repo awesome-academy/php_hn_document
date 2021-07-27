@@ -96,9 +96,11 @@ class DocumentController extends Controller
     public function destroy($id)
     {
         $document = Document::findOrFail($id);
-        $document->delete();
+        if ($this->authorize('delete', $document)) {
+            $document->delete();
 
-        return redirect()->route('user.documents.index');
+            return redirect()->route('user.documents.index');
+        }
     }
 
     public function upload()
@@ -163,19 +165,23 @@ class DocumentController extends Controller
     public function mark($id)
     {
         $document = Document::findOrFail($id);
-        $userLogin = Auth::user();
-        $userLogin->favorites()->attach($document);
+        if ($this->authorize('mark', $document)) {
+            $userLogin = Auth::user();
+            $userLogin->favorites()->attach($document);
 
-        return redirect()->route('user.documents.index');
+            return redirect()->route('user.documents.index');
+        }
     }
 
     public function unmark($id)
     {
         $document = Document::findOrFail($id);
-        $userLogin = Auth::user();
-        $userLogin->favorites()->detach($document);
+        if ($this->authorize('mark', $document)) {
+            $userLogin = Auth::user();
+            $userLogin->favorites()->detach($document);
 
-        return redirect()->route('user.documents.index');
+            return redirect()->route('user.documents.index');
+        }
     }
 
     public function download($id)
@@ -210,9 +216,11 @@ class DocumentController extends Controller
     public function comment(CommentRequest $request, $id)
     {
         $document = Document::findOrFail($id);
-        $user = Auth::user();
-        $user->comments()->attach($document, ['content' => $request->comment]);
+        if ($this->authorize('comment', $document)) {
+            $user = Auth::user();
+            $user->comments()->attach($document, ['content' => $request->comment]);
 
-        return redirect()->route('user.documents.show', ['document' => $document->id]);
+            return redirect()->route('user.documents.show', ['document' => $document->id]);
+        }
     }
 }

@@ -50,9 +50,11 @@
                                         </div>
                                         @if ($document->user_id == Auth::id())
                                             <div class="m-widget4__ext d-flex">
-                                                <form method="GET" action="">
-                                                    <button type="submit" class=" btn btn-sm btn-warning mr-4">
-                                                        @lang('user.edit') <i class="fas fa-pencil-alt"></i>
+                                                <form action="{{ route('documents.download', ['id' => $document->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button type="submit" class=" btn btn-sm btn-info mr-4">
+                                                        @lang('user.download') <i class="fas fa-file-download"></i>
                                                     </button>
                                                 </form>
                                                 <form method="POST"
@@ -66,12 +68,11 @@
                                             </div>
                                         @else
                                             <div class="m-widget4__ext d-flex">
-                                                <form action="">
-                                                    <button class=" btn btn-sm btn-warning mr-4">
-                                                        <a href="{{ asset('uploads\pdf\\' . $document->url) }}"
-                                                            download="{{ $document->name }}">
-                                                            @lang('user.download') <i class="fas fa-file-download"></i>
-                                                        </a>
+                                                <form action="{{ route('documents.download', ['id' => $document->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button type="submit" class=" btn btn-sm btn-info mr-4">
+                                                        @lang('user.download') <i class="fas fa-file-download"></i>
                                                     </button>
                                                 </form>
                                                 @if (Auth::user()->favorites->contains($document))
@@ -93,7 +94,6 @@
                                                 @endif
                                             </div>
                                         @endif
-
                                     </div>
                                 @endforeach
                             </div>
