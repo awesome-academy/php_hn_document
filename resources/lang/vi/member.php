@@ -1,0 +1,23 @@
+<?php
+return [
+    'list' => 'Danh sách thành viên',
+    'name' => 'Tên',
+    'id' => 'ID',
+    'email' => 'Email',
+    'phone' => 'Số điện thoại',
+    'address' => 'Địa chỉ',
+    'about' => 'Mô tả',
+    'upgrade' => 'Nâng cấp',
+    'ban' => 'Cấm tài khoản',
+    'image' => 'Ảnh đại diện',
+    'status' => 'Trạng thái',
+    'coin' => 'Coin',
+    'upgrade_success' => 'Thành viên được nâng cấp thành Quản trị viên thành công',
+    'ban_success' => 'Thành viên bị cấm thành công',
+    'create' => 'Tạo một Quản trị viên mới',
+    'add' => 'Tạo Quản trị viên mới',
+    'password' => 'Mật khẩu',
+    'confirm' => 'Xác nhận mật khẩu',
+    'add_success' => 'Thành viên được thêm là Quản trị viên thành công',
+    'role' => 'Vai trò',
+];

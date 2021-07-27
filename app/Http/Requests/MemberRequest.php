@@ -4,8 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
-class CategoryRequest extends FormRequest
+class MemberRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +26,12 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:1|max:100',
+            'name' => ['required', 'string', 'max:255', 'min:3'],
+            'email' => [
+                'required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user),
+            ],
+            'image' => ['mimes:png,jpeg,jpg'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
 }

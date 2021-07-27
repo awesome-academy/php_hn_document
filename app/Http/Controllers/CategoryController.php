@@ -115,6 +115,7 @@ class CategoryControler extends Controller
         $title = __('category.error');
         $message = __('category.delete_error');
         if ($category) {
+            $childCategories = $category->childCategories;
             if ($childCategories->count() > 0) {
                 $category->childCategories()->update([
                     'parent_id' => config('uploads.category_root'),
