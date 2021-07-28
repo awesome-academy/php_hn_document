@@ -50,48 +50,59 @@
                             <small class="or text-center">@lang('authen.or')</small>
                             <div class="line"></div>
                         </div>
-                        <form action="{{ route('register') }}" method="POST">
+                        <form id="form_register" action="{{ route('register') }}" method="POST">
                             @csrf
                             <div class="row px-3">
                                 <label class="mb-1">
                                     <h6 class="mb-0 text-sm label">@lang('authen.email')</h6>
-                                    @error('email')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_email" class="invalid-feedback d-block" role="alert">
+                                        @error('email')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </label>
-                                <input class="mb-4" type="email" name="email" placeholder="@lang('authen.email_input')">
+                                <input id="email" class="mb-4" type="email" name="email"
+                                    placeholder="@lang('authen.email_input')">
                             </div>
                             <div class="row px-3">
                                 <label class="mb-1">
                                     <h6 class="mb-0 text-sm label">@lang('authen.name')</h6>
-                                    @error('name')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_name" class="invalid-feedback d-block" role="alert">
+                                        @error('name')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </label>
-                                <input class="mb-4" type="text" name="name" placeholder="@lang('authen.name_input')">
+                                <input id="name" class="mb-4" type="text" name="name"
+                                    placeholder="@lang('authen.name_input')">
                             </div>
                             <div class="row px-3">
                                 <label class="mb-1">
                                     <h6 class="mb-0 text-sm label">@lang('authen.password')</h6>
-                                    @error('password')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_pass" class="invalid-feedback d-block" role="alert">
+                                        @error('password')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </label>
-                                <input class="mb-4" type="password" name="password"
+                                <input id="password" class="mb-4" type="password" name="password"
                                     placeholder="@lang('authen.password_input')">
                             </div>
                             <div class="row px-3">
                                 <label class="mb-1">
-                                    @error('password_confirmation')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
                                     <h6 class="mb-0 text-sm label">@lang('authen.confirm_password')</h6>
+                                    <span id="mess_confirm" class="invalid-feedback d-block" role="alert">
+                                        @error('password_confirmation')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </label>
-                                <input type="password" name="password_confirmation"
+                                <input id="password_confirm" type="password" name="password_confirmation"
                                     placeholder="@lang('authen.confirm_password_input')">
                             </div>
                             <div class="row mb-3 px-3">
-                                <button type="submit" class="btn btn-blue text-center">@lang('authen.register')</button>
+                                <button id="button_register" type="submit"
+                                    class="btn btn-blue text-center">@lang('authen.register')</button>
                             </div>
                         </form>
                         <div class="row mb-4 px-3">
@@ -104,4 +115,8 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script src="{{ asset('js/validate_login.js') }}"></script>
 @endsection
