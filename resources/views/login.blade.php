@@ -50,29 +50,31 @@
                             <small class="or text-center">@lang('authen.or')</small>
                             <div class="line"></div>
                         </div>
-                        <form action="{{ route('login') }}" method="POST">
+                        <form id="form_login" action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="row px-3">
                                 <label class="mb-1">
                                     <h6 class="mb-0 text-sm label">@lang('authen.email')</h6>
-                                    @error('email')
-                                        <span class="invalid-feedback d-block" role="alert">
+                                    <span id="mess_email" class="invalid-feedback d-block" role="alert">
+                                        @error('email')
                                             {{ $message }}
-                                        </span>
-                                    @enderror
+                                        @enderror
+                                    </span>
                                 </label>
-                                <input class="mb-4" type="email" name="email" placeholder="@lang('authen.email_input')">
+                                <input id="email" class="mb-4" type="email" name="email"
+                                    placeholder="@lang('authen.email_input')">
                             </div>
                             <div class="row px-3">
                                 <label class="mb-1">
                                     <h6 class="mb-0 text-sm label">@lang('authen.password')</h6>
-                                    @error('password')
-                                        <span class="invalid-feedback d-block" role="alert">
+                                    <span id="mess_pass" class="invalid-feedback d-block" role="alert">
+                                        @error('password')
                                             {{ $message }}
-                                        </span>
-                                    @enderror
+                                        @enderror
+                                    </span>
                                 </label>
-                                <input type="password" name="password" placeholder="@lang('authen.password_input')">
+                                <input id="password" type="password" name="password"
+                                    placeholder="@lang('authen.password_input')">
                             </div>
                             <div class="row px-3 mb-4">
                                 <div class="custom-control custom-checkbox custom-control-inline">
@@ -82,7 +84,8 @@
                                 <a href="" class="ml-auto mb-0 text-sm">@lang('authen.forgot')</a>
                             </div>
                             <div class="row mb-3 px-3">
-                                <button type="submit" class="btn btn-blue text-center">@lang('authen.login')</button>
+                                <button id="button_login" type="submit"
+                                    class="btn btn-blue text-center">@lang('authen.login')</button>
                             </div>
                         </form>
                         <div class="row mb-4 px-3">
@@ -95,4 +98,8 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script src="{{ asset('js/validate_login.js') }}"></script>
 @endsection

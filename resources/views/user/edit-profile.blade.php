@@ -48,81 +48,98 @@
             <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12">
                 <div class="card h-100">
                     <div class="card-body">
-                        <form action="{{ route('users.update', ['user' => $user->id]) }}" method="POST"
+                        <form id="form_edit" action="{{ route('users.update', ['user' => $user->id]) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">@lang('user.name')</h6>
-                                    @error('name')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_name" class="invalid-feedback d-block" role="alert">
+                                        @error('name')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    <input type="text" name="name" class="form-control" value='{{ $user->name }}'>
+                                    <input id="name" type="text" name="name" class="form-control"
+                                        value='{{ $user->name }}'>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">@lang('user.email')</h6>
-                                    @error('email')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_email" class="invalid-feedback d-block" role="alert">
+                                        @error('email')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    <input type="email" name="email" class="form-control" value='{{ $user->email }}'>
+                                    <input id="email" type="email" name="email" class="form-control"
+                                        value='{{ $user->email }}'>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">@lang('user.phone')</h6>
-                                    @error('phone')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_phone" class="invalid-feedback d-block" role="alert">
+                                        @error('phone')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    <input type="text" name="phone" class="form-control" value='{{ $user->phone }}'>
+                                    <input id="phone" type="text" name="phone" class="form-control"
+                                        value='{{ $user->phone }}'>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">@lang('user.address')</h6>
-                                    @error('address')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_address" class="invalid-feedback d-block" role="alert">
+                                        @error('address')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    <input type="text" name="address" class="form-control" value='{{ $user->address }}'>
+                                    <input id="address" type="text" name="address" class="form-control"
+                                        value='{{ $user->address }}'>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">@lang('user.about')</h6>
-                                    @error('about')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_about" class="invalid-feedback d-block" role="alert">
+                                        @error('about')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    <textarea type="text" name="about" class="form-control">{{ $user->about }}</textarea>
+                                    <textarea id="about" type="text" name="about"
+                                        class="form-control">{{ $user->about }}</textarea>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">@lang('user.avatar')</h6>
-                                    @error('avatar')
-                                        <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
-                                    @enderror
+                                    <span id="mess_avatar" class="invalid-feedback d-block" role="alert">
+                                        @error('avatar')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    <input type="file" name="avatar" class="form-control">
+                                    <input id="avatar" type="file" name="avatar" class="form-control">
                                 </div>
                             </div>
                             <br>
                             <div class="row gutters">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="text-right">
-                                        <button type="submit" id="submit" name="submit"
+                                        <button id="button_edit" type="submit" name="submit"
                                             class="btn btn-primary">@lang('user.update')</button>
                                     </div>
                                 </div>
@@ -133,4 +150,8 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script src="{{ asset('js/validate_login.js') }}"></script>
 @endsection

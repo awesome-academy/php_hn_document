@@ -206,8 +206,8 @@ class DocumentController extends Controller
         $author = $document->uploadBy;
         $user = Auth::user();
         if ($user->id != $author->id) {
-            if ($user->download_free >= config('user.download_free')) {
-                $download_free = $user->dowload_free - config('user.download_free');
+            if ($user->download_free >= config('user.download_free_least')) {
+                $download_free = $user->dowload_free - config('user.download_free_least');
                 $user->update([
                     'download_free' => $download_free
                 ]);
