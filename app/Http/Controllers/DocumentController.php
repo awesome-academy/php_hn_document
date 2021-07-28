@@ -15,6 +15,19 @@ use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
+    public function __construct()
+    {
+    }
+
+    private function getCategories()
+    {
+        $categories = Category::with('categories')
+            ->where('parent_id', '=', config('uploads.category_root'))
+            ->get();
+
+        return $categories;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,8 +37,9 @@ class DocumentController extends Controller
     {
         $documents = Auth::user()->documents;
         $favoriteDocuments = Auth::user()->favorites;
+        $categories = $this->getCategories();
 
-        return view('user.documents.list-document', compact('documents', 'favoriteDocuments'));
+        return view('user.documents.list-document', compact('documents', 'favoriteDocuments', 'categories'));
     }
 
     /**
@@ -60,8 +74,9 @@ class DocumentController extends Controller
         $document = Document::findOrFail($id);
         $author = $document->uploadBy;
         $comments = $document->comments()->orderBy('comments.created_at', 'desc')->get();
+        $categories = $this->getCategories();
 
-        return view('user.documents.show', compact('document', 'author', 'comments'));
+        return view('user.documents.show', compact('document', 'author', 'comments', 'categories'));
     }
 
     /**
@@ -157,9 +172,10 @@ class DocumentController extends Controller
 
     public function search(Request $request)
     {
-        $documents = Document::where('name', 'LIKE', '%' . $request->name . '%')->get();
+        $documents = Document::where('name', 'LIKE', '%' . $request->name . '%')->with('uploadBy')->get();
+        $categories = $this->getCategories();
 
-        return view('user.documents.search', compact('documents'));
+        return view('user.documents.search', compact('documents', 'categories'));
     }
 
     public function mark($id)
@@ -210,7 +226,7 @@ class DocumentController extends Controller
             ]);
         }
 
-        return response()->download(public_path('uploads/pdf/' . $document->url), $document->name);
+        return response()->download(public_path($document->url), $document->name);
     }
 
     public function comment(CommentRequest $request, $id)
@@ -222,5 +238,14 @@ class DocumentController extends Controller
 
             return redirect()->route('user.documents.show', ['document' => $document->id]);
         }
+    }
+
+    public function listDocuments($id)
+    {
+        $category = Category::findOrFail($id);
+        $documents = $category->documents;
+        $categories = $this->getCategories();
+
+        return view('user.documents.search', compact('categories', 'documents'));
     }
 }
