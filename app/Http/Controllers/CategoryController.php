@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Repositories\Category\CategoryRepositoryInterface;
 
 class CategoryController extends Controller
 {
+    protected $cateRepo;
+
+    public function __construct(CategoryRepositoryInterface $cateRepo)
+    {
+        $this->cateRepo = $cateRepo;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,8 +21,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('parent', 'childCategories')
-            ->get();
+        $categories = $this->cateRepo->getAll();
 
         return view('admin.categories.list', compact('categories'));
     }
@@ -28,9 +33,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('parent_id', '=', config('uploads.category_root'))
-            ->with('childCategories')
-            ->get();
+        $categories = $this->cateRepo->getChildCategories();
 
         return view('admin.categories.add', compact('categories'));
     }
@@ -43,26 +46,14 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $category = new Category();
         $parentId = ($request->category ?? config('uploads.category_root'));
-        $category->create([
+        $this->cateRepo->create([
             'name' => $request->name,
             'parent_id' => $parentId,
         ]);
         $message = __('category.create_success');
 
         return redirect(route('admin.categories.index'))->with('success', $message);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -73,11 +64,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $categories = Category::where('parent_id', '=', config('uploads.category_root'))
-            ->with('childCategories')
-            ->get();
-
-        $thisCategory = Category::findOrFail($id);
+        $categories = $this->cateRepo->getChildCategories();
+        $thisCategory = $this->cateRepo->find($id);
         $parent = $thisCategory->parent;
 
         return view('admin.categories.edit', compact('thisCategory', 'parent', 'categories'));
@@ -92,8 +80,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $category = Category::findOrFail($id);
-        $category->update([
+        $category = $this->cateRepo->find($id);
+        $this->cateRepo->update($category, [
             'name' => $request->name,
             'parent_id' => $request->category,
         ]);
@@ -110,18 +98,24 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::find($id);
+        $category = $this->cateRepo->find($id);
         $status = config('code.server_error');
         $title = __('category.error');
         $message = __('category.delete_error');
         if ($category) {
-            $childCategories = $category->childCategories;
-            if ($childCategories->count() > 0) {
-                $category->childCategories()->update([
-                    'parent_id' => config('uploads.category_root'),
-                ]);
+            $count = $this->cateRepo->countChildCategories($category);
+            if ($count > 0) {
+                $attribute = [
+                    'parent_id' => $category->parent_id,
+                ];
+
+                $category_id = [
+                    'category_id' => $category->parent_id,
+                ];
+                $this->cateRepo->updateDocumentsCategory($category, $category_id);
+                $this->cateRepo->updateChildCategoriesParent($category, $attribute);
             }
-            if ($category->delete()) {
+            if ($this->cateRepo->delete($category)) {
                 $title = __('category.success');
                 $message = __('category.delete_success');
                 $status = config('code.success');

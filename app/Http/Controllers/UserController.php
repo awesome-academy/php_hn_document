@@ -2,62 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\PaymentRequest;
 use App\Models\Receipt;
-use App\Models\Category;
+use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\Category\CategoryRepositoryInterface;
 
 class UserController extends Controller
 {
-    protected $categories;
+    protected $cateRepo;
 
-    public function __construct()
+    protected $userRepo;
+
+    public function __construct(UserRepositoryInterface $userRepo, CategoryRepositoryInterface $cateRepo)
     {
+        $this->userRepo = $userRepo;
+        $this->cateRepo = $cateRepo;
     }
-
-    private function getCategories()
-    {
-        $categories = Category::with('categories')
-            ->where('parent_id', '=', config('uploads.category_root'))
-            ->get();
-
-        return $categories;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
     /**
      * Display the specified resource.
      *
@@ -66,13 +28,13 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        $user = $this->userRepo->find($id);
         $check = false;
         $follow = false;
-        $categories = $this->getCategories();
+        $categories =  $this->cateRepo->getCategoriesRoot();
         if (Auth::check() && Auth::id() == $user->id) {
             $check = true;
-        } elseif (Auth::user()->followings->contains($user)) {
+        } elseif ($this->userRepo->getFollowings(Auth::user())->contains($user)) {
             $follow = true;
         }
 
@@ -87,11 +49,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        $categories = $this->getCategories();
-        if ($this->authorize('update', $user)) {
-            return view('user.edit-profile', compact('user', 'categories'));
-        }
+        $user = $this->userRepo->find($id);
+        $categories =  $this->cateRepo->getCategoriesRoot();
+        $this->authorize('update', $user);
+
+        return view('user.edit-profile', compact('user', 'categories'));
     }
 
     /**
@@ -103,57 +65,45 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, $id)
     {
-        $user = User::findOrFail($id);
-        if ($this->authorize('update', $user)) {
-            $user->update($request->all());
-            $avatar = $request->avatar;
-            if (isset($avatar)) {
-                $url = cloudinary()->upload($avatar->getRealPath())->getSecurePath();
-                $user->update([
-                    'image' => $url
-                ]);
-            }
-
-            return redirect()->route('users.show', ['user' => $user->id]);
+        $user = $this->userRepo->find($id);
+        $this->authorize('update', $user);
+        $this->userRepo->update($user, $request->all());
+        $avatar = $request->avatar;
+        if (isset($avatar)) {
+            $avatar_name = $avatar->getClientOriginalName();
+            $path = 'images/web/';
+            $avatar->storeAs($path, $avatar_name);
+            $this->userRepo->update($user, [
+                'image' => $path . $avatar_name
+            ]);
         }
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->route('users.show', ['user' => $user->id]);
     }
 
     public function follow($id)
     {
-        $user = User::findOrFail($id);
-        if ($this->authorize('follow', $user)) {
-            $userLogin = Auth::user();
-            $userLogin->followings()->attach($user->id);
+        $user = $this->userRepo->find($id);
+        $this->authorize('follow', $user);
+        $userLogin = Auth::user();
+        $this->userRepo->follow($userLogin, $user->id);
 
-            return redirect()->route('users.show', ['user' => $user->id]);
-        }
+        return redirect()->route('users.show', ['user' => $user->id]);
     }
 
     public function unfollow($id)
     {
-        $user = User::findOrFail($id);
-        if ($this->authorize('follow', $user)) {
-            $userLogin = Auth::user();
-            $userLogin->followings()->detach($user->id);
+        $user = $this->userRepo->find($id);
+        $this->authorize('follow', $user);
+        $userLogin = Auth::user();
+        $this->userRepo->unfollow($userLogin, $user->id);
 
-            return redirect()->route('users.show', ['user' => $user->id]);
-        }
+        return redirect()->route('users.show', ['user' => $user->id]);
     }
 
     public function buyCoin()
     {
-        $categories = $this->getCategories();
+        $categories =  $this->cateRepo->getCategoriesRoot();
 
         return view('user.buy-coin', compact('categories'));
     }
@@ -163,10 +113,10 @@ class UserController extends Controller
         $value = $request->value;
         $quantity = $request->quantity;
         $user = Auth::user();
-        $user->update([
+        $this->userRepo->update($user, [
             'coin' => $user->coin + $value * $quantity
         ]);
-        Receipt::create([
+        $this->userRepo->setReceipt([
             'value' => $value,
             'quantity' => $quantity,
             'user_id' => $user->id,
