@@ -110,6 +110,7 @@
                                         @endif
                                     </div>
                                 @endforeach
+                                {{ $documents->withQueryString()->links() }}
                             </div>
                         </div>
                     </div>

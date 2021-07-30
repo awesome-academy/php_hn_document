@@ -76,6 +76,7 @@ class RegisterController extends Controller
             'download_free' => config('user.download_free'),
             'upload' => config('user.upload'),
             'coin' => config('user.coin'),
+            'image' => config('user.image_default')
         ]);
         $role = Role::where('name', config('user.role_user'))->first();
         $user->role_id = $role->id;

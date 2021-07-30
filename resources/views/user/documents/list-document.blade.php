@@ -97,6 +97,7 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                {{ $documents->links() }}
                             </div>
                         </div>
                         <div class="tab-pane" id="m_widget4_tab2_content" role="tabpanel" aria-labelledby="favorite_link">
@@ -143,6 +144,7 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                {{ $favoriteDocuments->links() }}
                             </div>
                         </div>
                     </div>

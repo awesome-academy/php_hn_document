@@ -1,7 +1,7 @@
 @extends('user.layouts.master')
 
 @section('content')
-    <nav class="main_nav">
+    <nav>
         <div class="container">
             <div class="row">
                 <div class="bc-icons-2">

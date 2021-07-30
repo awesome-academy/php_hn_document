@@ -27,4 +27,5 @@ return [
     'banned_status' => 'banned',
     'image_default' => 'images/web/avatar_default.jpg',
     'invalid' => 'invalid',
+    'paginate' => 3,
 ];

@@ -11,9 +11,8 @@
                     <div class="header_search">
                         <div class="header_search_content">
                             <div class="header_search_form_container">
-                                <form action="{{ route('documents.search') }}" method="POST"
+                                <form action="{{ route('documents.search') }}"
                                     class="header_search_form clearfix">
-                                    @csrf
                                     <input type="search" name="name" required="required" class="header_search_input"
                                         placeholder="@lang('home.search')">
                                     <button type="submit" class="header_search_button trans_300" value="Submit">

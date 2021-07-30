@@ -29,7 +29,7 @@ Route::group(['middleware' => 'localization'], function () {
         ->name('user.documents.upload')->middleware('auth');
     Route::post('upload', 'DocumentController@storeUpload')
         ->name('user.documents.storeUpload')->middleware('auth');
-    Route::post('search', 'DocumentController@search')->name('documents.search');
+    Route::get('search', 'DocumentController@search')->name('documents.search');
     Route::post('mark/{id}', 'DocumentController@mark')->name('documents.mark');
     Route::post('unmark/{id}', 'DocumentController@unmark')->name('documents.unmark');
     Route::post('download/{id}', 'DocumentController@download')

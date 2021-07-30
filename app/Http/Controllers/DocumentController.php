@@ -35,8 +35,8 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documents = Auth::user()->documents;
-        $favoriteDocuments = Auth::user()->favorites;
+        $documents = Auth::user()->documents()->paginate(config('user.paginate'));
+        $favoriteDocuments = Auth::user()->favorites()->paginate(config('user.paginate'));
         $categories = $this->getCategories();
 
         return view('user.documents.list-document', compact('documents', 'favoriteDocuments', 'categories'));
@@ -172,7 +172,8 @@ class DocumentController extends Controller
 
     public function search(Request $request)
     {
-        $documents = Document::where('name', 'LIKE', '%' . $request->name . '%')->with('uploadBy')->get();
+        $documents = Document::where('name', 'LIKE', '%' . $request->name . '%')
+            ->with('uploadBy')->paginate(config('user.paginate'));
         $categories = $this->getCategories();
 
         return view('user.documents.search', compact('documents', 'categories'));
@@ -243,7 +244,7 @@ class DocumentController extends Controller
     public function listDocuments($id)
     {
         $category = Category::findOrFail($id);
-        $documents = $category->documents;
+        $documents = $category->documents()->paginate(config('user.paginate'));
         $categories = $this->getCategories();
 
         return view('user.documents.search', compact('categories', 'documents'));
