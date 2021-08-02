@@ -7,9 +7,16 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Repositories\User\UserRepositoryInterface;
 
 class MemberController extends Controller
 {
+    protected $userRepo;
+
+    public function __construct(UserRepositoryInterface $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +24,7 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $members = User::with('role')->get();
+        $members = $this->userRepo->getAll();
 
         return view('admin.members.list', compact('members'));
     }
@@ -44,7 +51,7 @@ class MemberController extends Controller
             $imageName = $request->name . "." . $extension;
             $image->storeAs($path, $imageName);
         }
-        $member = User::create([
+        $member = $this->userRepo->create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -57,77 +64,28 @@ class MemberController extends Controller
             'coin' => config('user.coin'),
             'password' => Hash::make($request->password),
         ]);
-        $role = Role::where('name', config('user.role_admin'))->first();
-        $member->role_id = $role->id;
-        $member->save();
-
+        $role = $this->userRepo->getRoleAdmin();
+        $this->userRepo->setRole($member, $role->id);
         $message = __('member.add_success');
 
         return redirect(route('admin.members.index'))->with('success', $message);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
     public function upgrade($id)
     {
-        $member = User::findOrFail($id);
-        $roleAdmin = Role::where('name', config('user.role_admin'))->first();
-        $member->role_id = $roleAdmin->id;
-        $member->save();
-
+        $member = $this->userRepo->find($id);
+        $role = $this->userRepo->getRoleAdmin();
+        $this->userRepo->setRole($member, $role->id);
         $message = __('member.upgrade_success');
 
         return redirect(route('admin.members.index'))->with('success', $message);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function ban($id)
     {
-        $member = User::findOrFail($id);
+        $member = $this->userRepo->find($id);
         $status =  config('user.banned_status');
-        $member->update([
+        $this->userRepo->update($member, [
             'status' => $status,
         ]);
         $message = __('member.ban_success');
