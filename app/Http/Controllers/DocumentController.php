@@ -3,29 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentRequest;
-use App\Models\Category;
 use App\Http\Requests\CommentRequest;
-use App\Models\Document;
-use App\Models\User;
-use Faker\Core\File;
-use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\Eloquent\Category\CategoryRepositoryInterface;
+use App\Repositories\Eloquent\Document\DocumentRepositoryInterface;
+use App\Repositories\Eloquent\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
-    public function __construct()
-    {
-    }
+    protected $documentRepository;
+    protected $userRepository;
+    protected $categoryRepository;
 
-    private function getCategories()
-    {
-        $categories = Category::with('categories')
-            ->where('parent_id', '=', config('uploads.category_root'))
-            ->get();
-
-        return $categories;
+    public function __construct(
+        UserRepositoryInterface $user,
+        CategoryRepositoryInterface $category,
+        DocumentRepositoryInterface $document
+    ) {
+        $this->userRepository = $user;
+        $this->categoryRepository = $category;
+        $this->documentRepository = $document;
     }
 
     /**
@@ -35,9 +33,9 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documents = Auth::user()->documents()->paginate(config('user.paginate'));
-        $favoriteDocuments = Auth::user()->favorites()->paginate(config('user.paginate'));
-        $categories = $this->getCategories();
+        $documents = $this->userRepository->ownDocuments(Auth::user());
+        $favoriteDocuments = $this->userRepository->favoriteDocument(Auth::user());
+        $categories = $this->categoryRepository->getChildCategoriesFromRoot();
 
         return view('user.documents.list-document', compact('documents', 'favoriteDocuments', 'categories'));
     }
@@ -63,20 +61,18 @@ class DocumentController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $document = Document::findOrFail($id);
-        $author = $document->uploadBy;
-        $comments = $document->comments()->orderBy('comments.created_at', 'desc')->get();
-        $categories = $this->getCategories();
+        $document = $this->documentRepository->find($id);
+        $categories = $this->categoryRepository->getChildCategoriesFromRoot();
+        if ($document) {
+            $author = $this->documentRepository->getAuthor($document);
+            $comments = $this->documentRepository->getComments($document);
 
-        return view('user.documents.show', compact('document', 'author', 'comments', 'categories'));
+            return view('user.documents.show', compact('document', 'author', 'comments', 'categories'));
+        } else {
+            return view('user.not-found', compact('categories'));
+        }
     }
 
     /**
@@ -110,19 +106,16 @@ class DocumentController extends Controller
      */
     public function destroy($id)
     {
-        $document = Document::findOrFail($id);
-        if ($this->authorize('delete', $document)) {
-            $document->delete();
+        $document = $this->documentRepository->find($id);
+        $this->authorize('delete', $document);
+        $this->documentRepository->delete($id);
 
-            return redirect()->route('user.documents.index');
-        }
+        return redirect()->route('user.documents.index');
     }
 
     public function upload()
     {
-        $categories = Category::with('childCategories')
-            ->where('parent_id', '=', config('uploads.category_root'))
-            ->get();
+        $categories = $this->categoryRepository->getChildCategoriesFromRoot();
 
         return view('user.documents.upload', compact('categories'));
     }
@@ -133,119 +126,101 @@ class DocumentController extends Controller
         if ($user->upload <= 0) {
             $message = __('uploads.expired_times');
 
-            return back()->with('error', $message);
+            return redirect()->route('user.documents.upload')->with('error', $message);
         } else {
             $file = $request->file('file');
-            $filename = $file->getClientOriginalName();
-            $document = new Document();
             $category = ($request->category == '') ? config('uploads.category_root') : $request->category;
-            $url = $this->saveFile($file);
+            $url = $this->documentRepository->saveFile($file);
             $attributes = [
                 'name' => $request->name,
                 'description' => $request->description,
-                'url' => $url . $filename,
+                'url' => $url,
                 'user_id' => $user->id,
                 'category_id' => $category,
             ];
-            $document->create($attributes);
+            $this->documentRepository->create($attributes);
             $upload = $user->upload - 1;
             $coin = $user->coin + 10;
-            $user->update([
+            $this->userRepository->update($user->id, [
                 'upload' => $upload,
                 'coin' => $coin,
             ]);
             $message = __('uploads.success');
 
-            return back()->with('success', $message);
+            return redirect()->route('user.documents.upload')->with('success', $message);
         }
     }
 
-    public function saveFile(UploadedFile $file)
-    {
-        $filename = $file->getClientOriginalName();
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-        $path = 'uploads/' . $extension . '/';
-        $file->storeAs($path, $filename);
-
-        return $path;
-    }
 
     public function search(Request $request)
     {
-        $documents = Document::where('name', 'LIKE', '%' . $request->name . '%')
-            ->with('uploadBy')->paginate(config('user.paginate'));
-        $categories = $this->getCategories();
+        $documents = $this->documentRepository->search($request->name);
+        $categories = $this->categoryRepository->getChildCategoriesFromRoot();
 
         return view('user.documents.search', compact('documents', 'categories'));
     }
 
     public function mark($id)
     {
-        $document = Document::findOrFail($id);
-        if ($this->authorize('mark', $document)) {
-            $userLogin = Auth::user();
-            $userLogin->favorites()->attach($document);
+        $document = $this->documentRepository->find($id);
+        $this->authorize('mark', $document);
+        $this->userRepository->mark(Auth::user(), $document);
 
-            return redirect()->route('user.documents.index');
-        }
+        return redirect()->route('user.documents.index');
     }
 
     public function unmark($id)
     {
-        $document = Document::findOrFail($id);
-        if ($this->authorize('mark', $document)) {
-            $userLogin = Auth::user();
-            $userLogin->favorites()->detach($document);
+        $document = $this->documentRepository->find($id);
+        $this->authorize('mark', $document);
+        $this->userRepository->unmark(Auth::user(), $document);
 
-            return redirect()->route('user.documents.index');
-        }
+        return redirect()->route('user.documents.index');
     }
 
     public function download($id)
     {
-        $document = Document::findOrFail($id);
-        $author = $document->uploadBy;
+        $document = $this->documentRepository->find($id);
+        $author = $this->documentRepository->getAuthor($document);
         $user = Auth::user();
         if ($user->id != $author->id) {
             if ($user->download_free >= config('user.download_free_least')) {
                 $download_free = $user->dowload_free - config('user.download_free_least');
-                $user->update([
+                $this->userRepository->update($user->id, [
                     'download_free' => $download_free
                 ]);
             } elseif ($user->coin >= config('user.coin_least')) {
                 $coin = $user->coin - config('user.coin_least');
-                $user->update([
+                $this->userRepository->update($user->id, [
                     'coin' => $coin
                 ]);
             } else {
                 return redirect()->route('buy-coin');
             }
-            $user->downloads()->attach($document);
+            $this->userRepository->download($user, $document);
             $coin = $author->coin + config('user.coin_author');
-            $author->update([
+            $this->userRepository->update($author->id, [
                 'coin' => $coin
             ]);
         }
+        $filename = substr($document->url, 12);
 
-        return response()->download(public_path($document->url), $document->name);
+        return response()->download(public_path($document->url), $filename);
     }
 
     public function comment(CommentRequest $request, $id)
     {
-        $document = Document::findOrFail($id);
-        if ($this->authorize('comment', $document)) {
-            $user = Auth::user();
-            $user->comments()->attach($document, ['content' => $request->comment]);
+        $document = $this->documentRepository->find($id);
+        $this->authorize('comment', $document);
+        $this->userRepository->comment(Auth::user(), $request->comment, $document);
 
-            return redirect()->route('user.documents.show', ['document' => $document->id]);
-        }
+        return redirect()->route('user.documents.show', ['document' => $document->id]);
     }
 
     public function listDocuments($id)
     {
-        $category = Category::findOrFail($id);
-        $documents = $category->documents()->paginate(config('user.paginate'));
-        $categories = $this->getCategories();
+        $documents = $this->categoryRepository->getDocumentsByCategory($id);
+        $categories = $this->categoryRepository->getChildCategoriesFromRoot();
 
         return view('user.documents.search', compact('categories', 'documents'));
     }
