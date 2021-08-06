@@ -6,17 +6,29 @@ use App\Repositories\RepositoryInterface;
 
 abstract class BaseRepository implements RepositoryInterface
 {
+    /**
+     * @var Model
+     */
     protected $model;
 
+    /**
+     * EloquentRepository constructor.
+     * @throws BindingResolutionException
+     */
     public function __construct()
     {
         $this->setModel();
     }
 
+    /**
+     * get model
+     * @return string
+     */
     abstract public function getModel();
 
     /**
      * Set model
+     * @throws BindingResolutionException
      */
     public function setModel()
     {
@@ -25,34 +37,73 @@ abstract class BaseRepository implements RepositoryInterface
         );
     }
 
-    public function getAll()
+    /**
+     * Get All
+     * @return Collection|static[]
+     */
+    public function all()
     {
+
         return $this->model->all();
     }
 
+    /**
+     * Get one
+     * @param $id
+     * @return mixed
+     */
     public function find($id)
     {
-        $result = $this->model->findOrFail($id);
-
+        try {
+            $result = $this->model->findOrFail($id);
+        } catch (\Exception $e) {
+            return false;
+        }
         return $result;
     }
 
-    public function create($attributes = [])
+    /**
+     * Create
+     * @param array $attributes
+     * @return mixed
+     */
+    public function create(array $attributes)
     {
         return $this->model->create($attributes);
     }
 
-    public function update($model, $attributes = [])
+    /**
+     * Update
+     * @param $id
+     * @param array $attributes
+     * @return bool|mixed
+     */
+    public function update($id, array $attributes)
     {
-        $model->update($attributes);
+        $result = $this->find($id);
+        if ($result) {
+            $result->update($attributes);
+            return $result;
+        }
 
-        return $model;
+        return false;
     }
 
-    public function delete($model)
+    /**
+     * Delete
+     *
+     * @param $id
+     * @return bool
+     */
+    public function delete($id)
     {
-        $model->delete();
+        $result = $this->find($id);
+        if ($result) {
+            $result->delete();
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 }

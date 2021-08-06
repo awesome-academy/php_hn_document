@@ -29,15 +29,6 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
         return $categories;
     }
 
-    public function getChildCategories()
-    {
-        $categories = $this->model->where('parent_id', '=', config('uploads.category_root'))
-            ->with('childCategories')
-            ->get();
-
-        return $categories;
-    }
-
     public function countChildCategories($category)
     {
         return $category->childCategories->count();
@@ -51,5 +42,21 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     public function updateDocumentsCategory($category, $attribute = [])
     {
         return $category->documents()->update($attribute);
+    }
+
+    public function getChildCategoriesFromRoot()
+    {
+        $categories = Category::where('parent_id', '=', config('uploads.category_root'))
+            ->with('childCategories')
+            ->get();
+
+        return $categories;
+    }
+
+    public function getDocumentsByCategory($id)
+    {
+        $category = $this->find($id);
+
+        return $category->documents()->paginate(config('user.paginate'));
     }
 }

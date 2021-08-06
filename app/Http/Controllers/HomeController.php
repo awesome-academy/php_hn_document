@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Session;
-use App\Models\Category;
+use App\Repositories\Category\CategoryRepositoryInterface;
 
 class HomeController extends Controller
 {
+    protected $cateRepo;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(CategoryRepositoryInterface $cateRepo)
     {
+        $this->cateRepo = $cateRepo;
     }
 
     /**
@@ -24,9 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('categories')
-            ->where('parent_id', '=', config('uploads.category_root'))
-            ->get();
+        $categories =  $this->cateRepo->getCategoriesRoot();
 
         return view('user.home', compact('categories'));
     }

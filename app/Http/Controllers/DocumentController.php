@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentRequest;
 use App\Http\Requests\CommentRequest;
-use App\Repositories\Eloquent\Category\CategoryRepositoryInterface;
-use App\Repositories\Eloquent\Document\DocumentRepositoryInterface;
-use App\Repositories\Eloquent\User\UserRepositoryInterface;
+use App\Repositories\Category\CategoryRepositoryInterface;
+use App\Repositories\Document\DocumentRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

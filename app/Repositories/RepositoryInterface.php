@@ -8,7 +8,7 @@ interface RepositoryInterface
      * Get all
      * @return mixed
      */
-    public function getAll();
+    public function all();
 
     /**
      * Get one
@@ -22,7 +22,7 @@ interface RepositoryInterface
      * @param array $attributes
      * @return mixed
      */
-    public function create($attributes = []);
+    public function create(array $attributes);
 
     /**
      * Update
@@ -30,12 +30,12 @@ interface RepositoryInterface
      * @param array $attributes
      * @return mixed
      */
-    public function update($model, $attributes = []);
+    public function update($id, array $attributes);
 
     /**
      * Delete
      * @param $id
      * @return mixed
      */
-    public function delete($model);
+    public function delete($id);
 }
