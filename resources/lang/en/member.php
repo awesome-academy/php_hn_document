@@ -8,6 +8,8 @@ return [
     'address' => 'Address',
     'about' => 'About',
     'upgrade' => 'Upgrade',
+    'demote' => 'Demote',
+    'unban' => 'Unban',
     'ban' => 'Ban',
     'image' => 'Avatar',
     'status' => 'Status',
@@ -20,5 +22,7 @@ return [
     'password' => 'Password',
     'confirm' => 'Confirm password',
     'add_success' => 'The member is added to Admin successfully',
-    'role' => 'Role'
+    'role' => 'Role',
+    'number' => 'Number',
+    'success' => 'Success',
 ];

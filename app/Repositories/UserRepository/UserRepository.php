@@ -53,6 +53,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return Role::where('name', config('user.role_admin'))->first();
     }
 
+    public function getRoleUser()
+    {
+        return Role::where('name', config('user.role_user'))->first();
+    }
+
     public function setReceipt($attributes = [])
     {
         return Receipt::create($attributes);
