@@ -21,7 +21,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = $this->cateRepo->getAll();
+        $categories = $this->cateRepo->all();
 
         return view('admin.categories.list', compact('categories'));
     }
@@ -33,7 +33,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = $this->cateRepo->getChildCategories();
+        $categories = $this->cateRepo->getChildCategoriesFromRoot();
 
         return view('admin.categories.add', compact('categories'));
     }
@@ -64,11 +64,15 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $categories = $this->cateRepo->getChildCategories();
         $thisCategory = $this->cateRepo->find($id);
-        $parent = $thisCategory->parent;
+        $categories = $this->cateRepo->getChildCategoriesFromRoot();
+        if ($thisCategory) {
+            $parent = $thisCategory->parent;
 
-        return view('admin.categories.edit', compact('thisCategory', 'parent', 'categories'));
+            return view('admin.categories.edit', compact('thisCategory', 'parent', 'categories'));
+        }
+
+        return view('user.not-found', compact('categories'));
     }
 
     /**
@@ -81,13 +85,19 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = $this->cateRepo->find($id);
-        $this->cateRepo->update($category, [
-            'name' => $request->name,
-            'parent_id' => $request->category,
-        ]);
-        $message = __('category.update_success');
+        if ($category) {
+            $this->cateRepo->update($category->id, [
+                'name' => $request->name,
+                'parent_id' => $request->category,
+            ]);
+            $message = __('category.update_success');
 
-        return redirect(route('admin.categories.index'))->with('success', $message);
+            return redirect(route('admin.categories.index'))->with('success', $message);
+        } else {
+            $categories =  $this->cateRepo->getCategoriesRoot();
+
+            return view('user.not-found', compact('categories'));
+        }
     }
 
     /**
@@ -99,34 +109,40 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = $this->cateRepo->find($id);
-        $status = config('code.server_error');
-        $title = __('category.error');
-        $message = __('category.delete_error');
         if ($category) {
-            $count = $this->cateRepo->countChildCategories($category);
-            if ($count > 0) {
-                $attribute = [
-                    'parent_id' => $category->parent_id,
-                ];
+            $status = config('code.server_error');
+            $title = __('category.error');
+            $message = __('category.delete_error');
+            if ($category) {
+                $count = $this->cateRepo->countChildCategories($category);
+                if ($count > 0) {
+                    $attribute = [
+                        'parent_id' => $category->parent_id,
+                    ];
 
-                $category_id = [
-                    'category_id' => $category->parent_id,
-                ];
-                $this->cateRepo->updateDocumentsCategory($category, $category_id);
-                $this->cateRepo->updateChildCategoriesParent($category, $attribute);
+                    $category_id = [
+                        'category_id' => $category->parent_id,
+                    ];
+                    $this->cateRepo->updateDocumentsCategory($category, $category_id);
+                    $this->cateRepo->updateChildCategoriesParent($category, $attribute);
+                }
+                if ($this->cateRepo->delete($category->id)) {
+                    $title = __('category.success');
+                    $message = __('category.delete_success');
+                    $status = config('code.success');
+                } else {
+                    $status = config('code.client_error');
+                }
             }
-            if ($this->cateRepo->delete($category)) {
-                $title = __('category.success');
-                $message = __('category.delete_success');
-                $status = config('code.success');
-            } else {
-                $status = config('code.client_error');
-            }
+
+            return response()->json([
+                'message' => $message,
+                'title' => $title,
+            ], $status);
+        } else {
+            $categories =  $this->cateRepo->getCategoriesRoot();
+
+            return view('user.not-found', compact('categories'));
         }
-
-        return response()->json([
-            'message' => $message,
-            'title' => $title,
-        ], $status);
     }
 }

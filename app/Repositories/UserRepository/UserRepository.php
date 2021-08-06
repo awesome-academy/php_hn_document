@@ -15,9 +15,16 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return User::class;
     }
 
-    public function getAll()
+    public function all()
     {
         return $this->model->with('role')->get();
+    }
+
+    public function update($user, array $attributes)
+    {
+        $user->update($attributes);
+
+        return $user;
     }
 
     public function getFollowings($user)
@@ -49,5 +56,43 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function setReceipt($attributes = [])
     {
         return Receipt::create($attributes);
+    }
+
+    public function mark($user, $document)
+    {
+        $user->favorites()->attach($document);
+
+        return true;
+    }
+
+    public function unmark($user, $document)
+    {
+        $user->favorites()->detach($document);
+
+        return true;
+    }
+
+    public function download($user, $document)
+    {
+        $user->downloads()->attach($document);
+
+        return true;
+    }
+
+    public function comment($user, $content, $document)
+    {
+        $user->comments()->attach($document, ['content' => $content]);
+
+        return true;
+    }
+
+    public function favoriteDocument($user)
+    {
+        return $user->favorites()->paginate(config('user.paginate'));
+    }
+
+    public function ownDocuments($user)
+    {
+        return $user->documents()->paginate(config('user.paginate'));
     }
 }

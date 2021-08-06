@@ -29,16 +29,20 @@ class UserController extends Controller
     public function show($id)
     {
         $user = $this->userRepo->find($id);
-        $check = false;
-        $follow = false;
         $categories =  $this->cateRepo->getCategoriesRoot();
-        if (Auth::check() && Auth::id() == $user->id) {
-            $check = true;
-        } elseif ($this->userRepo->getFollowings(Auth::user())->contains($user)) {
-            $follow = true;
+        if ($user) {
+            $check = false;
+            $follow = false;
+            if (Auth::check() && Auth::id() == $user->id) {
+                $check = true;
+            } elseif ($this->userRepo->getFollowings(Auth::user())->contains($user)) {
+                $follow = true;
+            }
+
+            return view('user.profile', compact('user', 'check', 'follow', 'categories'));
         }
 
-        return view('user.profile', compact('user', 'check', 'follow', 'categories'));
+        return view('user.not-found', compact('categories'));
     }
 
     /**
@@ -51,9 +55,13 @@ class UserController extends Controller
     {
         $user = $this->userRepo->find($id);
         $categories =  $this->cateRepo->getCategoriesRoot();
-        $this->authorize('update', $user);
+        if ($user) {
+            $this->authorize('update', $user);
 
-        return view('user.edit-profile', compact('user', 'categories'));
+            return view('user.edit-profile', compact('user', 'categories'));
+        }
+
+        return view('user.not-found', compact('categories'));
     }
 
     /**
@@ -66,39 +74,57 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, $id)
     {
         $user = $this->userRepo->find($id);
-        $this->authorize('update', $user);
-        $this->userRepo->update($user, $request->all());
-        $avatar = $request->avatar;
-        if (isset($avatar)) {
-            $avatar_name = $avatar->getClientOriginalName();
-            $path = 'images/web/';
-            $avatar->storeAs($path, $avatar_name);
-            $this->userRepo->update($user, [
-                'image' => $path . $avatar_name
-            ]);
-        }
+        if ($user) {
+            $this->authorize('update', $user);
+            $this->userRepo->update($user, $request->all());
+            $avatar = $request->avatar;
+            if (isset($avatar)) {
+                $avatar_name = $avatar->getClientOriginalName();
+                $path = 'images/web/';
+                $avatar->storeAs($path, $avatar_name);
+                $this->userRepo->update($user, [
+                    'image' => $path . $avatar_name
+                ]);
+            }
 
-        return redirect()->route('users.show', ['user' => $user->id]);
+            return redirect()->route('users.show', ['user' => $user->id]);
+        } else {
+            $categories =  $this->cateRepo->getCategoriesRoot();
+
+            return view('user.not-found', compact('categories'));
+        }
     }
 
     public function follow($id)
     {
         $user = $this->userRepo->find($id);
-        $this->authorize('follow', $user);
-        $userLogin = Auth::user();
-        $this->userRepo->follow($userLogin, $user->id);
+        if ($user) {
+            $this->authorize('follow', $user);
+            $userLogin = Auth::user();
+            $this->userRepo->follow($userLogin, $user->id);
 
-        return redirect()->route('users.show', ['user' => $user->id]);
+            return redirect()->route('users.show', ['user' => $user->id]);
+        } else {
+            $categories =  $this->cateRepo->getCategoriesRoot();
+
+            return view('user.not-found', compact('categories'));
+        }
     }
 
     public function unfollow($id)
     {
         $user = $this->userRepo->find($id);
-        $this->authorize('follow', $user);
-        $userLogin = Auth::user();
-        $this->userRepo->unfollow($userLogin, $user->id);
+        if ($user) {
+            $this->authorize('follow', $user);
+            $userLogin = Auth::user();
+            $this->userRepo->unfollow($userLogin, $user->id);
 
-        return redirect()->route('users.show', ['user' => $user->id]);
+            return redirect()->route('users.show', ['user' => $user->id]);
+        } else {
+            $categories =  $this->cateRepo->getCategoriesRoot();
+
+            return view('user.not-found', compact('categories'));
+        }
     }
 
     public function buyCoin()

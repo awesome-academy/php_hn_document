@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Repositories\Eloquent\Document;
+namespace App\Repositories\Document;
 
 use App\Models\Document;
-use App\Repositories\EloquentRepository;
-use Illuminate\Http\UploadedFile;
+use App\Repositories\BaseRepository;
 
-class DocumentRepository extends EloquentRepository implements DocumentRepositoryInterface
+class DocumentRepository extends BaseRepository implements DocumentRepositoryInterface
 {
-
     /**
      * @inheritDoc
      */

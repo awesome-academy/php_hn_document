@@ -24,7 +24,7 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $members = $this->userRepo->getAll();
+        $members = $this->userRepo->all();
 
         return view('admin.members.list', compact('members'));
     }
@@ -74,22 +74,32 @@ class MemberController extends Controller
     public function upgrade($id)
     {
         $member = $this->userRepo->find($id);
-        $role = $this->userRepo->getRoleAdmin();
-        $this->userRepo->setRole($member, $role->id);
-        $message = __('member.upgrade_success');
+        $categories =  $this->cateRepo->getCategoriesRoot();
+        if ($member) {
+            $role = $this->userRepo->getRoleAdmin();
+            $this->userRepo->setRole($member, $role->id);
+            $message = __('member.upgrade_success');
 
-        return redirect(route('admin.members.index'))->with('success', $message);
+            return redirect(route('admin.members.index'))->with('success', $message);
+        }
+
+        return view('user.not-found', compact('categories'));
     }
 
     public function ban($id)
     {
         $member = $this->userRepo->find($id);
-        $status =  config('user.banned_status');
-        $this->userRepo->update($member, [
-            'status' => $status,
-        ]);
-        $message = __('member.ban_success');
+        $categories =  $this->cateRepo->getCategoriesRoot();
+        if ($member) {
+            $status =  config('user.banned_status');
+            $this->userRepo->update($member->id, [
+                'status' => $status,
+            ]);
+            $message = __('member.ban_success');
 
-        return redirect(route('admin.members.index'))->with('success', $message);
+            return redirect(route('admin.members.index'))->with('success', $message);
+        }
+
+        return view('user.not-found', compact('categories'));
     }
 }

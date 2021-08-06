@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Repositories\Eloquent\Document;
+namespace App\Repositories\Document;
 
-interface DocumentRepositoryInterface
+use App\Repositories\RepositoryInterface;
+
+interface DocumentRepositoryInterface extends RepositoryInterface
 {
     /**
      * @param $name

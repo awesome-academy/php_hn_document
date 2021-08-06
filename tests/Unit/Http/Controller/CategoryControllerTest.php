@@ -33,7 +33,7 @@ class CategoryControllerTest extends TestCase
     public function testIndex()
     {
         $categories = factory(Category::class, 5)->make();
-        $this->cateMock->shouldReceive('getAll')->andReturn($categories);
+        $this->cateMock->shouldReceive('all')->andReturn($categories);
         $controller = $this->cateController->index();
         $this->assertEquals('admin.categories.list', $controller->getName());
         $this->assertArrayHasKey('categories', $controller->getData());
@@ -42,7 +42,7 @@ class CategoryControllerTest extends TestCase
     public function testCreate()
     {
         $categories = factory(Category::class, 5)->make();
-        $this->cateMock->shouldReceive('getChildCategories')->andReturn($categories);
+        $this->cateMock->shouldReceive('getChildCategoriesFromRoot')->andReturn($categories);
         $controller = $this->cateController->create();
         $this->assertEquals('admin.categories.add', $controller->getName());
         $this->assertArrayHasKey('categories', $controller->getData());
@@ -70,7 +70,7 @@ class CategoryControllerTest extends TestCase
         $category->id = 1;
         $category->setRelation('parent', $category_parent);
         $this->cateMock->shouldReceive('find')->andReturn($category);
-        $this->cateMock->shouldReceive('getChildCategories')->andReturn($categories);
+        $this->cateMock->shouldReceive('getChildCategoriesFromRoot')->andReturn($categories);
         $controller = $this->cateController->edit($category->id);
         $this->assertEquals('admin.categories.edit', $controller->getName());
         $this->assertArrayHasKey('parent', $controller->getData());
@@ -90,7 +90,7 @@ class CategoryControllerTest extends TestCase
             'name' => $request->name,
             'parent_id' => $request->category,
         ];
-        $this->cateMock->shouldReceive('update')->with($category, $attr);
+        $this->cateMock->shouldReceive('update')->with($category->id, $attr);
         $controller = $this->cateController->update($request, $category->id);
         $this->assertEquals(route('admin.categories.index'), $controller->getTargetUrl());
     }
@@ -117,7 +117,7 @@ class CategoryControllerTest extends TestCase
             ->with($category, $attribute)
             ->andReturn($category);
         $this->cateMock->shouldReceive('delete')
-            ->with($category)
+            ->with($category->id)
             ->andReturn(true);
         $controller = $this->cateController->destroy($category->id);
         $title = __('category.success');
@@ -138,7 +138,7 @@ class CategoryControllerTest extends TestCase
             ->with($category)
             ->andReturn(0);
         $this->cateMock->shouldReceive('delete')
-            ->with($category)
+            ->with($category->id)
             ->andReturn(false);
         $controller = $this->cateController->destroy($category->id);
         $title = __('category.error');
