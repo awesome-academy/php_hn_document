@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\Document;
 use App\Models\User;
 use App\Repositories\Category\CategoryRepositoryInterface;
-use App\Repositories\Document\DocumentRepositoryInterface;
+use App\Repositories\DocumentRepository\DocumentRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Access\AuthorizationException;

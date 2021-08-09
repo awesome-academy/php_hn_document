@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\PaymentRequest;
-use App\Models\Receipt;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Category\CategoryRepositoryInterface;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Receipt;
 
 class UserController extends Controller
 {
@@ -76,13 +77,13 @@ class UserController extends Controller
         $user = $this->userRepo->find($id);
         if ($user) {
             $this->authorize('update', $user);
-            $this->userRepo->update($user, $request->all());
+            $this->userRepo->update($user->id, $request->all());
             $avatar = $request->avatar;
             if (isset($avatar)) {
                 $avatar_name = $avatar->getClientOriginalName();
                 $path = 'images/web/';
                 $avatar->storeAs($path, $avatar_name);
-                $this->userRepo->update($user, [
+                $this->userRepo->update($user->id, [
                     'image' => $path . $avatar_name
                 ]);
             }
@@ -139,7 +140,7 @@ class UserController extends Controller
         $value = $request->value;
         $quantity = $request->quantity;
         $user = Auth::user();
-        $this->userRepo->update($user, [
+        $this->userRepo->update($user->id, [
             'coin' => $user->coin + $value * $quantity
         ]);
         $this->userRepo->setReceipt([
@@ -147,6 +148,13 @@ class UserController extends Controller
             'quantity' => $quantity,
             'user_id' => $user->id,
         ]);
+
+        $receipt = [
+            'value' => $value,
+            'quantity' => $quantity,
+            'total' => $value * $quantity,
+        ];
+        Mail::to($user->email)->send(new Receipt($receipt, $user));
 
         return redirect()->route('users.show', ['user' => $user->id]);
     }

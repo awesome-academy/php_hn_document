@@ -6,8 +6,8 @@ use App\Repositories\Category\CategoryRepository;
 use App\Repositories\Category\CategoryRepositoryInterface;
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\UserRepositoryInterface;
-use App\Repositories\Document\DocumentRepository;
-use App\Repositories\Document\DocumentRepositoryInterface;
+use App\Repositories\DocumentRepository\DocumentRepository;
+use App\Repositories\DocumentRepository\DocumentRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

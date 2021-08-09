@@ -20,13 +20,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model->with('role')->get();
     }
 
-    public function update($user, array $attributes)
-    {
-        $user->update($attributes);
-
-        return $user;
-    }
-
     public function getFollowings($user)
     {
         return $user->followings;

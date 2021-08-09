@@ -31,7 +31,7 @@
                         <div class="account-settings">
                             <div class="user-profile">
                                 <div class="user-avatar">
-                                    <img id="avatar" src={{ $user->image }}>
+                                    <img id="avatar" src={{ asset($user->image) }}>
                                     <input id="upload-avatar" type="file" class="d-none">
                                 </div>
                                 <h5 class="user-name">{{ $user->name }}</h5>
