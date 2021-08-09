@@ -2,6 +2,7 @@
     "/js/add_member.js": "/js/add_member.js",
     "/js/app.js": "/js/app.js",
     "/js/delete_category.js": "/js/delete_category.js",
+    "/js/member_ban_upgrade.js": "/js/member_ban_upgrade.js",
     "/js/upload.js": "/js/upload.js",
     "/js/validate_login.js": "/js/validate_login.js",
     "/css/style.css": "/css/style.css",

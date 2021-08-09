@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\UsersDataTable;
 use App\Http\Requests\MemberRequest;
-use App\Models\Role;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\User\UserRepositoryInterface;
 
@@ -22,11 +20,9 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(UsersDataTable $dataTable)
     {
-        $members = $this->userRepo->all();
-
-        return view('admin.members.list', compact('members'));
+        return $dataTable->render('admin.members.list');
     }
 
     /**
@@ -74,32 +70,33 @@ class MemberController extends Controller
     public function upgrade($id)
     {
         $member = $this->userRepo->find($id);
-        $categories =  $this->cateRepo->getCategoriesRoot();
-        if ($member) {
-            $role = $this->userRepo->getRoleAdmin();
+        $role = $this->userRepo->getRoleAdmin();
+        if ($member->role_id != $role->id) {
             $this->userRepo->setRole($member, $role->id);
-            $message = __('member.upgrade_success');
-
-            return redirect(route('admin.members.index'))->with('success', $message);
+        } else {
+            $roleUser = $this->userRepo->getRoleUser();
+            $this->userRepo->setRole($member, $roleUser->id);
         }
+        $code = config('code.success');
 
-        return view('user.not-found', compact('categories'));
+        return response()->json($code);
     }
 
     public function ban($id)
     {
         $member = $this->userRepo->find($id);
-        $categories =  $this->cateRepo->getCategoriesRoot();
-        if ($member) {
-            $status =  config('user.banned_status');
-            $this->userRepo->update($member->id, [
+        $status =  config('user.banned_status');
+        if ($member->status == $status) {
+            $this->userRepo->update($member, [
+                'status' => config('user.confirm'),
+            ]);
+        } else {
+            $this->userRepo->update($member, [
                 'status' => $status,
             ]);
-            $message = __('member.ban_success');
-
-            return redirect(route('admin.members.index'))->with('success', $message);
         }
+        $code = config('code.success');
 
-        return view('user.not-found', compact('categories'));
+        return response()->json($code);
     }
 }

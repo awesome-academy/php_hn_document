@@ -24,6 +24,8 @@
     "bootstrap-sweetalert": "^1.0.1",
     "validate": "validate.js#^0.13.1",
     "moment": "^2.29.1",
-    "underscore": "^1.13.1"
+    "underscore": "^1.13.1",
+    "datatables.net": "^1.10.25",
+    "datatables.net-dt": "^3.2.2"
   }
 }

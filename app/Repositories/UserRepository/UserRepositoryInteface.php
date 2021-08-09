@@ -16,6 +16,8 @@ interface UserRepositoryInterface extends RepositoryInterface
 
     public function getRoleAdmin();
 
+    public function getRoleUser();
+
     public function setReceipt($attributes = []);
 
     public function mark($user, $document);
