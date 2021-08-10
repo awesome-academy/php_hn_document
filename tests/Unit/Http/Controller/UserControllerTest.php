@@ -115,9 +115,9 @@ class UserControllerTest extends TestCase
         $avatar_name = $avatar->getClientOriginalName();
         $path = 'images/web/';
         $this->userMock->shouldReceive('update')
-            ->with($user, $request->all());
+            ->with($user->id, $request->all());
         $this->userMock->shouldReceive('update')
-            ->with($user, [
+            ->with($user->id, [
                 'image' => $path . $avatar_name
             ]);
         $controller = $this->userController->update($request, $user->id);
@@ -134,7 +134,7 @@ class UserControllerTest extends TestCase
         $request->name = 'test_name';
         $request->email = 'test.email.gmail.com';
         $this->userMock->shouldReceive('update')
-            ->with($user, $request->all());
+            ->with($user->id, $request->all());
         $controller = $this->userController->update($request, $user->id);
         $this->assertEquals(route('users.show', ['user' => $user->id]), $controller->getTargetUrl());
     }
@@ -223,7 +223,7 @@ class UserControllerTest extends TestCase
             'quantity' => $request->quantity,
             'user_id' => $user->id,
         ];
-        $this->userMock->shouldReceive('update')->with($user, $coin);
+        $this->userMock->shouldReceive('update')->with($user->id, $coin);
         $this->userMock->shouldReceive('setReceipt')->with($receipt);
         $controller = $this->userController->payment($request, $user->id);
         $this->assertEquals(route('users.show', ['user' => $user->id]), $controller->getTargetUrl());

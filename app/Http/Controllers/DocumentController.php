@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Http\Requests\CommentRequest;
 use App\Repositories\Category\CategoryRepositoryInterface;
-use App\Repositories\Document\DocumentRepositoryInterface;
+use App\Repositories\DocumentRepository\DocumentRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -185,7 +185,7 @@ class DocumentController extends Controller
         $user = Auth::user();
         if ($user->id != $author->id) {
             if ($user->download_free >= config('user.download_free_least')) {
-                $download_free = $user->dowload_free - config('user.download_free_least');
+                $download_free = $user->download_free - config('user.download_free_least');
                 $this->userRepository->update($user->id, [
                     'download_free' => $download_free
                 ]);
