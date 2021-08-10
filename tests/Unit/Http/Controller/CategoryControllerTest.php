@@ -32,11 +32,8 @@ class CategoryControllerTest extends TestCase
 
     public function testIndex()
     {
-        $categories = factory(Category::class, 5)->make();
-        $this->cateMock->shouldReceive('all')->andReturn($categories);
         $controller = $this->cateController->index();
         $this->assertEquals('admin.categories.list', $controller->getName());
-        $this->assertArrayHasKey('categories', $controller->getData());
     }
 
     public function testCreate()

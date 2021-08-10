@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Repositories\Document;
+namespace App\Repositories\DocumentRepository;
 
 use App\Models\Document;
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Facades\DB;
 
 class DocumentRepository extends BaseRepository implements DocumentRepositoryInterface
 {
@@ -43,5 +44,25 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
         $file->storeAs($path, $filename);
 
         return $path . $filename;
+    }
+
+    public function getDataPerMonth($table, $years)
+    {
+        $dataMonth = [];
+        foreach ($years as $year) {
+            $months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            $data = DB::table($table)
+                ->whereYear('created_at', $year->year)
+                ->select(array(DB::raw('distinct MONTH(created_at) as month'), DB::raw('count(*) as total')))
+                ->groupBy('month')
+                ->orderByRaw('MONTH(created_at) asc')
+                ->get();
+            foreach ($data as $d) {
+                $months[--$d->month] = $d->total;
+            }
+            $dataMonth[$year->year] = $months;
+        }
+
+        return $dataMonth;
     }
 }

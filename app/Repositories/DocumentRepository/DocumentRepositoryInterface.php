@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Document;
+namespace App\Repositories\DocumentRepository;
 
 use App\Repositories\RepositoryInterface;
 
@@ -29,4 +29,11 @@ interface DocumentRepositoryInterface extends RepositoryInterface
      * @return mixed
      */
     public function saveFile($file);
+
+    /**
+     * @param $years
+     * @param $table
+     * @return mixed
+     */
+    public function getDataPerMonth($table, $years);
 }

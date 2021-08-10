@@ -43,6 +43,7 @@ Route::group(['middleware' => 'localization'], function () {
         'as' => 'admin',
     ]);
     Route::get('admin', 'AdminController@index')->name('admin.home');
+    Route::get('admin/category-data', 'CategoryController@getData')->name('category.data');
     Route::resource('/admin/members', 'MemberController', [
         'as' => 'admin',
     ]);

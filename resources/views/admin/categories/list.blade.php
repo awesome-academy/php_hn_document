@@ -21,54 +21,20 @@
                 <h6 class="m-0 font-weight-bold text-primary">@lang('admin.categories')</h6>
             </div>
             <div class="card-body">
+                <input hidden value="{{ route('category.data') }}" id="categoryData">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="categoryTable">
                         <thead>
                             <tr>
-                                <th>@lang('category.id')</th>
+                                <th>@lang('member.number')</th>
                                 <th>@lang('category.name')</th>
                                 <th>@lang('category.parent')</th>
                                 <th>@lang('category.created')</th>
                                 <th>@lang('category.updated')</th>
-                                <th>@lang('category.edit')</th>
-                                <th>@lang('category.delete')</th>
+                                <th id="edit">@lang('category.edit')</th>
+                                <th id="delete">@lang('category.delete')</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>@lang('category.id')</th>
-                                <th>@lang('category.name')</th>
-                                <th>@lang('category.parent')</th>
-                                <th>@lang('category.created')</th>
-                                <th>@lang('category.updated')</th>
-                                <th>@lang('category.edit')</th>
-                                <th>@lang('category.delete')</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            @foreach ($categories as $category)
-                            <tr>
-                                <td id="dataId">{{ $category->id }}</td>
-                                <td>{{ $category->name }}</td>
-                                <td>{{ ($category->parent != null ? $category->parent->name : __('category.root')) }}</td>
-                                <td>{{ $category->created_at }}</td>
-                                <td>{{ $category->updated_at }}</td>
-                                <td>
-                                    <a href="{{ route('admin.categories.edit', ['category' => $category->id]) }}"
-                                    class="btn btn-info">
-                                        <i class="fas fa-pen"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    <button type="submit" class="btn btn-danger btnDelete" >
-                                        <input id="url" type="hidden" value="{{ route('admin.categories.destroy', ['category' => $category->id]) }}">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </td>
-                                <input id="hasChildren" type="hidden" value="{{ $category->childCategories->count() == null ? 0 : 1 }}">
-                            </tr>
-                            @endforeach
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -76,5 +42,6 @@
     </div>
 @endsection
 @section('js')
+    <script src="{{ asset('js/category_datatable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/delete_category.js') }}" type="text/javascript"></script>
 @endsection

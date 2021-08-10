@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 abstract class BaseRepository implements RepositoryInterface
 {
@@ -105,5 +106,13 @@ abstract class BaseRepository implements RepositoryInterface
         }
 
         return false;
+    }
+
+    public function getYearsStatistic($table)
+    {
+        return DB::table($table)
+            ->selectRaw('distinct YEAR(created_at) as year')
+            ->orderByRaw('YEAR(created_at) asc')
+            ->get();
     }
 }

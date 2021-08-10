@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryRequest;
 use Illuminate\Http\Request;
 use App\Repositories\Category\CategoryRepositoryInterface;
+use Yajra\Datatables\Datatables;
 
 class CategoryController extends Controller
 {
@@ -21,9 +22,28 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = $this->cateRepo->all();
+        return view('admin.categories.list');
+    }
 
-        return view('admin.categories.list', compact('categories'));
+    public function getData()
+    {
+        $categories = $this->cateRepo->getAll();
+
+        return Datatables::of($categories)
+            ->addIndexColumn()
+            ->addColumn(__('category.edit'), function ($category) {
+                return '<a href="' . route('admin.categories.edit', $category->id) . '" 
+                        class="btn btn-info"><i class="fas fa-pen"></i></a>';
+            })
+            ->addColumn(__('category.delete'), function ($category) {
+                return '<input id="hasChildren" type="hidden"
+                        value="' . ($category->childCategories->count() == null ? 0 : 1) . '">
+                        <input id="url" type="hidden" value="' . route('admin.categories.destroy', $category->id) . '">
+                        <button type="submit" class="btn btn-danger btnDelete">
+                        <i class="fa fa-trash"></i></button>';
+            })
+            ->rawColumns([__('category.edit'), __('category.delete')])
+            ->make(true);
     }
 
     /**
