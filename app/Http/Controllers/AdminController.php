@@ -2,83 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Repositories\DocumentRepository\DocumentRepositoryInterface;
+use App\Repositories\ReceiptRepository\ReceiptRepositoryInterface;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $documentRepository;
+    protected $receiptRepository;
+    public function __construct(
+        DocumentRepositoryInterface $document,
+        ReceiptRepositoryInterface $receipt
+    ) {
+        $this->documentRepository = $document;
+        $this->receiptRepository = $receipt;
+    }
+
     public function index()
     {
-        return view('admin.index');
-    }
+        $year_coin = $this->receiptRepository->getYearsStatistic('receipts');
+        $year_download = $this->documentRepository->getYearsStatistic('downloads');
+        $year_upload = $this->documentRepository->getYearsStatistic('documents');
+        $downloadMonth = $this->documentRepository->getDataPerMonth('downloads', $year_download);
+        $uploadMonth = $this->documentRepository->getDataPerMonth('documents', $year_upload);
+        $coinMonth = $this->receiptRepository->getCoinsPerMonth($year_coin);
+        $years = array_unique(array_merge(array_keys($uploadMonth), array_keys($downloadMonth)));
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return view('admin.index', [
+            'downloadMonth' => $downloadMonth,
+            'uploadMonth' => $uploadMonth,
+            'coin' => $coinMonth,
+            'years' => $years,
+            'year_coin' => $year_coin,
+        ]);
     }
 }

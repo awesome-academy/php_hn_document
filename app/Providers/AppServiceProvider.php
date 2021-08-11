@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Repositories\Category\CategoryRepository;
 use App\Repositories\Category\CategoryRepositoryInterface;
+use App\Repositories\ReceiptRepository\ReceiptRepository;
+use App\Repositories\ReceiptRepository\ReceiptRepositoryInterface;
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\DocumentRepository\DocumentRepository;
@@ -30,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             DocumentRepositoryInterface::class,
             DocumentRepository::class
+        );
+        $this->app->singleton(
+            ReceiptRepositoryInterface::class,
+            ReceiptRepository::class
         );
     }
 

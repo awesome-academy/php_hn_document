@@ -59,5 +59,6 @@
     <script src="{{ asset('bower_components/underscore/underscore-min.js') }}"></script>
     <script src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/chart.js') }}"></script>
     @yield('js')
 </body>

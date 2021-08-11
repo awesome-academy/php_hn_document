@@ -29,4 +29,11 @@ interface DocumentRepositoryInterface extends RepositoryInterface
      * @return mixed
      */
     public function saveFile($file);
+
+    /**
+     * @param $years
+     * @param $table
+     * @return mixed
+     */
+    public function getDataPerMonth($table, $years);
 }
