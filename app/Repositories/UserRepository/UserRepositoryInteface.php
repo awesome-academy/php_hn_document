@@ -31,4 +31,6 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function favoriteDocument($user);
 
     public function ownDocuments($user);
+
+    public function sendFollowing($userLogin, $user);
 }

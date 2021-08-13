@@ -38,7 +38,12 @@
 
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
     <script type='text/javascript' src='{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js') }}'></script>
-
+    <script src="{{ asset('bower_components/pusher-js/dist/web/pusher.min.js') }}"></script>
+    <script>
+        window.translations = {!! $translation !!};
+        window.env_key = '{{ env('PUSHER_APP_KEY') }}';
+    </script>
+    <script src="{{ asset('js/following_notification.js') }}"></script>
     @stack('scripts')
 
     @yield('js')

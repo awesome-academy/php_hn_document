@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendFollowing;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\PaymentRequest;
@@ -9,6 +10,7 @@ use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Receipt;
+use Pusher\Pusher;
 
 class UserController extends Controller
 {
@@ -103,6 +105,7 @@ class UserController extends Controller
             $this->authorize('follow', $user);
             $userLogin = Auth::user();
             $this->userRepo->follow($userLogin, $user->id);
+            $this->userRepo->sendFollowing($userLogin, $user);
 
             return redirect()->route('users.show', ['user' => $user->id]);
         } else {

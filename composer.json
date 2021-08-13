@@ -17,8 +17,10 @@
         "laravel/framework": "^7.29",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^2.4",
+        "pusher/pusher-php-server": "^7.0",
         "yajra/laravel-datatables-buttons": "^4.0",
-        "yajra/laravel-datatables-oracle": "^9.18"
+        "yajra/laravel-datatables-oracle": "^9.18",
+        "ext-json": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
@@ -46,7 +48,7 @@
         "classmap": [
             "database/seeds",
             "database/factories",
-            "app/Repositories"            
+            "app/Repositories"
         ]
     },
     "autoload-dev": {
