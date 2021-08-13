@@ -18,6 +18,7 @@ mix.js([
         'resources/css/header.css',
         'resources/css/footer.css',
         'resources/css/home.css',
+        'resources/css/notification.css',
     ], 'public/css/style.css');
 mix.styles('resources/css/authentication.css', 'public/css/authentication.css')
 mix.styles('resources/css/user-profile.css', 'public/css/user-profile.css')
@@ -29,3 +30,4 @@ mix.js('resources/js/delete_category.js', 'public/js/delete_category.js')
 mix.js('resources/js/add_member.js', 'public/js/add_member.js')
 mix.js('resources/js/validate_login.js', 'public/js/validate_login.js')
 mix.js('resources/js/member_ban_upgrade.js', 'public/js/member_ban_upgrade.js')
+mix.js('resources/js/following_notification.js', 'public/js/following_notification.js')

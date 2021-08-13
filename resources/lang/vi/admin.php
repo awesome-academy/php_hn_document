@@ -28,4 +28,6 @@ return [
     'delete' => 'Xóa',
     'edit' => 'Sửa',
     'update' => 'Cập nhật',
+    'coin_chart' => 'Số Coins bán được mỗi tháng',
+    'document_chart' => 'Lượt Uploads và Downloads mỗi tháng',
 ];

@@ -26,6 +26,7 @@
     "moment": "^2.29.1",
     "underscore": "^1.13.1",
     "datatables.net": "^1.10.25",
-    "datatables.net-dt": "^3.2.2"
+    "datatables.net-dt": "^3.2.2",
+    "pusher-js": "pusher#^7.0.3"
   }
 }

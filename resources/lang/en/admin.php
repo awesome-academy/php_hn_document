@@ -28,4 +28,6 @@ return [
     'delete' => 'Delete',
     'edit' => 'Edit',
     'update' => 'Update',
+    'coin_chart' => 'Coins sold per month',
+    'document_chart' => 'Uploads and Downloads per month',
 ];
