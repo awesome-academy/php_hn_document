@@ -28,4 +28,6 @@ return [
     'image_default' => 'images/web/avatar_default.jpg',
     'invalid' => 'invalid',
     'paginate' => 3,
+    'read' => 1,
+    'un_read'=> 0,
 ];
