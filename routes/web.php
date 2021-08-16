@@ -40,16 +40,24 @@ Route::group(['middleware' => 'localization'], function () {
     Route::post('/payment', 'UserController@payment')
         ->name('payment')->middleware('auth');
     Route::post('comment/{id}', 'DocumentController@comment')->name('documents.comment');
-    Route::resource('/admin/categories', 'CategoryController', [
-        'as' => 'admin',
-    ]);
-    Route::get('admin', 'AdminController@index')->name('admin.home');
-    Route::get('admin/category-data', 'CategoryController@getData')->name('category.data');
-    Route::resource('/admin/members', 'MemberController', [
-        'as' => 'admin',
-    ]);
-    Route::post('admin/members/ban/{id}', 'MemberController@ban')->name('admin.members.ban');
-    Route::post('admin/members/upgrade/{id}', 'MemberController@upgrade')->name('admin.members.upgrade');
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::resource('/admin/categories', 'CategoryController', [
+            'as' => 'admin',
+        ]);
+        Route::get('admin', 'AdminController@index')->name('admin.home');
+        Route::get('admin/category-data', 'CategoryController@getData')->name('category.data');
+        Route::resource('/admin/members', 'MemberController', [
+            'as' => 'admin',
+        ]);
+        Route::post('admin/members/ban/{id}', 'MemberController@ban')->name('admin.members.ban');
+        Route::post('admin/members/upgrade/{id}', 'MemberController@upgrade')->name('admin.members.upgrade');
+        Route::get('admin/documents', 'AdminController@documentList')->name('admin.documents.list');
+        Route::get('admin/document-data', 'AdminController@getDocuments')->name('document.data');
+        Route::post('admin/document/delete/{id}', 'AdminController@deleteDocument')
+            ->name('admin.documents.soft-delete');
+        Route::post('admin/document/restore/{id}', 'AdminController@restoreDocument')
+            ->name('admin.documents.restore');
+    });
     Route::get('category/{id}/documents', 'DocumentController@listDocuments')->name('user.category_documents');
     Route::get('chat', 'MessageController@index')->name('user.chat');
     Route::get('messages/{id}', 'MessageController@getMessages')->name('user.messages');

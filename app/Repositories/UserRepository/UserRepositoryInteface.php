@@ -33,4 +33,8 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function ownDocuments($user);
 
     public function sendFollowing($userLogin, $user);
+
+    public function markNotification($id);
+
+    public function markAllNotification($user);
 }
