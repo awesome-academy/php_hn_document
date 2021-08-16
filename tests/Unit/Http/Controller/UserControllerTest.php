@@ -171,6 +171,7 @@ class UserControllerTest extends TestCase
         $this->userMock->shouldReceive('find')->andReturn($user_follow);
         $this->be($user);
         $this->userMock->shouldReceive('follow')->with($user, $user_follow->id);
+        $this->userMock->shouldReceive('sendFollowing')->with($user, $user_follow);
         $controller = $this->userController->follow($user_follow->id);
         $this->assertEquals(route('users.show', ['user' => $user_follow->id]), $controller->getTargetUrl());
     }

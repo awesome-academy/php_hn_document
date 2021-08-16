@@ -2,10 +2,12 @@
 
 namespace App\Repositories\User;
 
+use App\Notifications\FollowingNotification;
 use App\Repositories\BaseRepository;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Receipt;
+use Pusher\Pusher;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -92,5 +94,29 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function ownDocuments($user)
     {
         return $user->documents()->paginate(config('user.paginate'));
+    }
+
+    public function sendFollowing($userLogin, $user)
+    {
+        $data = [
+            'following' => 'notification.following_message',
+            'name' => $userLogin->name,
+            'id' => $userLogin->id,
+            'user' => $user->id,
+            'image' =>  asset($userLogin->image ?? asset(config('user.image_default'))),
+        ];
+        $user->notify(new FollowingNotification($data));
+        $options = array(
+            'cluster' => 'ap1',
+            'encrypted' => true
+        );
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            $options
+        );
+
+        $pusher->trigger('following-notification.' . $user->id, 'SendFollowing', $data);
     }
 }
