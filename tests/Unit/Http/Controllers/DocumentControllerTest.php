@@ -206,6 +206,9 @@ class DocumentControllerTest extends TestCase
             ->shouldReceive('saveFile')
             ->once()
             ->andReturn($url);
+        $this->documentMock
+            ->shouldReceive('getPreviewImages')
+            ->once();
         $this->documentMock->shouldReceive('create')->with([
             'name' => $request->name,
             'description' => $request->description,

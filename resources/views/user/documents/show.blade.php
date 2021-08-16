@@ -72,7 +72,15 @@
                         </form>
                     @endif
                 </div>
-                <iframe src="{{ asset($document->url) }}" scrolling="auto" frameborder="0" class="mx-auto mt-4"></iframe>
+                <div>
+                    <ul class="doc-online">
+                        @for ($i = 0; $i <= config('uploads.preview_pages'); $i++)
+                            <li class="media">
+                                <img src="{{ asset('uploads/preview/' . $document->name) . '-' . $i  . '.' . config('uploads.cover_type')}}">
+                            </li>
+                        @endfor
+                    </ul>
+                </div>
             </div>
             <div class="col-md-9 col-sm-12 mx-auto my-5">
                 <div class="comment-wrapper">
@@ -97,7 +105,8 @@
                                 @foreach ($comments as $comment)
                                     <li class="media">
                                         <a href="" class="float-left mr-3">
-                                            <img src="{{ $comment->image }}" alt="" class="rounded-circle">
+                                            <img src="{{ $comment->image != null ? asset($comment->image) : asset(config('user.image_default')) }}"
+                                                 alt="" class="rounded-circle">
                                         </a>
                                         <div class="media-body">
                                             <span class="text-muted float-right">

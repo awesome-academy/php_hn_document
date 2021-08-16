@@ -1,3 +1,4 @@
+
 const mix = require('laravel-mix');
 
 /*
@@ -19,6 +20,7 @@ mix.js([
         'resources/css/footer.css',
         'resources/css/home.css',
         'resources/css/notification.css',
+        'resources/css/home_document.css',
     ], 'public/css/style.css');
 mix.styles('resources/css/authentication.css', 'public/css/authentication.css')
 mix.styles('resources/css/user-profile.css', 'public/css/user-profile.css')
