@@ -1,14 +1,18 @@
 {
-    "/js/add_member.js": "/js/add_member.js",
     "/js/app.js": "/js/app.js",
-    "/js/delete_category.js": "/js/delete_category.js",
-    "/js/member_ban_upgrade.js": "/js/member_ban_upgrade.js",
     "/js/upload.js": "/js/upload.js",
+    "/js/delete_category.js": "/js/delete_category.js",
+    "/js/add_member.js": "/js/add_member.js",
     "/js/validate_login.js": "/js/validate_login.js",
+    "/js/member_ban_upgrade.js": "/js/member_ban_upgrade.js",
+    "/js/following_notification.js": "/js/following_notification.js",
+    "/js/category_datatable.js": "/js/category_datatable.js",
+    "/js/chart_admin.js": "/js/chart_admin.js",
     "/css/style.css": "/css/style.css",
     "/css/authentication.css": "/css/authentication.css",
     "/css/user-profile.css": "/css/user-profile.css",
     "/css/list-docs.css": "/css/list-docs.css",
     "/css/upload.css": "/css/upload.css",
-    "/css/buy-coin.css": "/css/buy-coin.css"
+    "/css/buy-coin.css": "/css/buy-coin.css",
+    "/js/chart.js": "/js/chart.js"
 }
