@@ -131,6 +131,7 @@ class DocumentController extends Controller
             $file = $request->file('file');
             $category = ($request->category == '') ? config('uploads.category_root') : $request->category;
             $url = $this->documentRepository->saveFile($file);
+            $this->documentRepository->getPreviewImages($file, $request->name);
             $attributes = [
                 'name' => $request->name,
                 'description' => $request->description,

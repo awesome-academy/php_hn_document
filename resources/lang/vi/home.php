@@ -60,4 +60,6 @@ return [
     'edit_profile' => 'Chỉnh sửa trang cá nhân',
     'list_documents' => 'Danh sách tài liệu',
     'logout' => 'Đăng xuất',
+    'new_documents' => 'Các tài liệu mới',
+    'most_downloads' => 'Tài liệu được tải nhiều nhất'
 ];

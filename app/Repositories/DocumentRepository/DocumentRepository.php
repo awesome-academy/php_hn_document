@@ -5,6 +5,7 @@ namespace App\Repositories\DocumentRepository;
 use App\Models\Document;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
+use Imagick;
 
 class DocumentRepository extends BaseRepository implements DocumentRepositoryInterface
 {
@@ -64,5 +65,37 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
         }
 
         return $dataMonth;
+    }
+
+    public function getMostDownloads()
+    {
+        $documents = Document::with('category')
+            ->withCount(['downloads', 'comments'])
+            ->orderBy('downloads_count', 'DESC')
+            ->take(config('uploads.documents_per_row'))
+            ->get();
+
+        return $documents;
+    }
+
+    public function getNewUploads()
+    {
+        $documents = Document::with('category')
+            ->withCount(['downloads', 'comments'])
+            ->orderBy('created_at', 'DESC')
+            ->take(config('uploads.documents_per_row'))
+            ->get();
+
+        return $documents;
+    }
+
+    public function getPreviewImages($file, $target)
+    {
+        $imgExt = new Imagick();
+        for ($i = 0; $i <= config('uploads.preview_pages'); $i++) {
+            $path = 'uploads/preview/' . $target . "-" . $i . "." . config('uploads.cover_type');
+            $imgExt->readImage($file . "[" . $i . "]");
+            $imgExt->writeImage($path);
+        }
     }
 }

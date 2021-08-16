@@ -36,6 +36,19 @@
             </div>
         </div>
     </section>
+    <div class="container">
+        <br>
+        <div class="row">
+            @if ($newDocuments != null)
+                @include('user.documents.new-documents')
+            @endif
+        </div>
+        <div class="row">
+            @if ($mostDownloads != null)
+                @include('user.documents.most-downloads')
+            @endif
+        </div>
+    </div>
     <section class="section services-section" id="services">
         <div class="container">
             <div class="row">

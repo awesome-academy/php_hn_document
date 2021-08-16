@@ -36,4 +36,19 @@ interface DocumentRepositoryInterface extends RepositoryInterface
      * @return mixed
      */
     public function getDataPerMonth($table, $years);
+
+    /**
+     * @return mixed
+     */
+    public function getMostDownloads();
+
+    /**
+     * @return mixed
+     */
+    public function getNewUploads();
+
+    /**
+     * @return mixed
+     */
+    public function getPreviewImages($file, $target);
 }

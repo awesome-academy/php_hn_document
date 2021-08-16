@@ -60,4 +60,6 @@ return [
     'edit_profile' => 'Edit Profile',
     'list_documents' => 'List Documents',
     'logout' => 'Logout',
+    'new_documents' => 'New documents',
+    'most_downloads' => 'Most downloaded documents'
 ];
