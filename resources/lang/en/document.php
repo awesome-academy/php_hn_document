@@ -1,0 +1,28 @@
+<?php
+return [
+    'cover' => 'Cover image',
+    'name' => 'Name',
+    'category' => 'Category',
+    'created_by' => 'Created By',
+    'deleted_by' => 'Deleted By',
+    'deleted_at' => 'Deleted At',
+    'restore' => 'Restore',
+    'delete' => 'Delete',
+    'deleted_success_mess' => 'The document is softly deleted successfully!',
+    'deleted_success' => 'Success',
+    'deleted_error' => 'Error',
+    'deleted_error_mess' => 'Something went wrong when delete this document!',
+    'restore_success_mess' => 'The document is restored successfully!',
+    'restore_success' => 'Success',
+    'restore_error' => 'Error',
+    'restore_error_mess' => 'Something went wrong when restore this document!',
+    'sure' => 'Are you sure?',
+    'sure_delete' => 'Do you really want to delete?',
+    'yes_delete' => 'Yes, delete it!',
+    'cancel' => 'No, cancel plx!',
+    'ok' => 'OK!',
+    'data_not_change' => 'Your data wasn\'t changed',
+    'sure_restore' => 'Do you really want to restore?',
+    'yes_restore' => 'Yes, restore it!',
+
+];

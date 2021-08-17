@@ -98,4 +98,20 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
             $imgExt->writeImage($path);
         }
     }
+
+    public function getData()
+    {
+        $documents = Document::with('category', 'uploadBy')
+            ->withTrashed()
+            ->get();
+
+        return $documents;
+    }
+
+    public function restore($id)
+    {
+        $document = Document::withTrashed()->where('id', $id)->restore();
+
+        return ($document ? true : false);
+    }
 }

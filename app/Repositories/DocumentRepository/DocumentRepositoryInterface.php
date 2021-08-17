@@ -51,4 +51,11 @@ interface DocumentRepositoryInterface extends RepositoryInterface
      * @return mixed
      */
     public function getPreviewImages($file, $target);
+
+    /**
+     * @return mixed
+     */
+    public function getData();
+
+    public function restore($id);
 }

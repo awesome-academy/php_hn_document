@@ -49,7 +49,7 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">@lang('admin.option'):</h6>
-                <a class="collapse-item" href="#">@lang('admin.document_list')</a>
+                <a class="collapse-item" href="{{ route('admin.documents.list') }}">@lang('admin.document_list')</a>
             </div>
         </div>
     </li>
