@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\SendFollowing;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\PaymentRequest;
+use App\Jobs\ProcessMail;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Category\CategoryRepositoryInterface;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Receipt;
-use Pusher\Pusher;
 
 class UserController extends Controller
 {
@@ -157,7 +154,7 @@ class UserController extends Controller
             'quantity' => $quantity,
             'total' => $value * $quantity,
         ];
-        Mail::to($user->email)->send(new Receipt($receipt, $user));
+        ProcessMail::dispatch($user, $receipt);
 
         return redirect()->route('users.show', ['user' => $user->id]);
     }

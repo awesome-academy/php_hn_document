@@ -19,7 +19,7 @@ class Admin
     {
         $admin_role = Role::where('name', config('user.role_admin'))->first();
         $user = Auth::user();
-        if ($user->role_id === $admin_role) {
+        if ($user->role_id === $admin_role->id) {
             return $next($request);
         }
 
