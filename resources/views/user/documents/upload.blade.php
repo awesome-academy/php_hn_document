@@ -68,6 +68,10 @@
                                         <option value="">@lang('uploads.select_category')</option>
                                         @include('user.documents.category_options', ['level' => 0])
                                     </select>
+                                    <br>
+                                    <label for="">@lang('category.name'):</label>
+                                    <input name="newCategory" type="text" class="form-control" id="inputCategory"
+                                        placeholder="@lang('category.type_name')">
                                 </div>
                                 <div class="form-group">
                                     @error('name')

@@ -26,6 +26,7 @@ Pusher.logToConsole = true;
 var pusher = new Pusher(window.env_key, {
     cluster: 'ap1'
 });
+var url = window.location.origin; 
 var notificationsWrapper = $('#notify');
 var notificationsBell = $('#bell');
 var notificationsSpan = notificationsBell.find('span[data-count]');
@@ -35,7 +36,7 @@ var user = $('#userLogin').val();
 var channelName = 'following-notification.' + user
 var channel = pusher.subscribe(channelName);
 channel.bind('SendFollowing', function (data) {
-    var route = "http://127.0.0.1:8000/mark/" + data.id;
+    var route = url + "/mark/" + data.id;
     var existingNotifications = notifications.html();
     var newNotificationHtml =
         `<div class="notifications-item"> <img src="` + data['image'] + `">
