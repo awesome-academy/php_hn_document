@@ -2,13 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
+    protected $userRepo;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(UserRepositoryInterface $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
+
     public function mark($id)
     {
-        Auth::user()->unreadNotifications->where('data.id', $id)->markAsRead();
+        $this->userRepo->markNotification($id);
 
         return redirect()->route('users.show', $id);
     }
@@ -16,7 +29,7 @@ class NotificationController extends Controller
     public function markAll()
     {
         $user = Auth::user();
-        $user->unreadNotifications()->update(['read_at' => now()]);
+        $this->userRepo->markAllNotification($user);
 
         return redirect()->back();
     }

@@ -76,6 +76,18 @@ class UserControllerTest extends TestCase
         $this->assertArrayHasKey('follow', $controller->getData());
     }
 
+    public function testShowUserNotFound()
+    {
+        $user = factory(User::class)->make();
+        $categories = factory(Category::class, 5)->make();
+        $this->userMock->shouldReceive('find')->andReturn(false);
+        $this->cateMock->shouldReceive('getCategoriesRoot')->andReturn($categories);
+        $this->be($user);
+        $controller = $this->userController->show($user->id);
+        $this->assertEquals('user.not-found', $controller->getName());
+        $this->assertArrayHasKey('categories', $controller->getData());
+    }
+
     public function testEdit()
     {
         $user = factory(User::class)->make();
@@ -102,6 +114,18 @@ class UserControllerTest extends TestCase
         $this->be($user_login);
         $this->expectException(AuthorizationException::class);
         $this->userController->edit($user->id);
+    }
+
+    public function testEditUserNotFound()
+    {
+        $user = factory(User::class)->make();
+        $user->id = 1;
+        $categories = factory(Category::class, 5)->make();
+        $this->userMock->shouldReceive('find')->andReturn(false);
+        $this->cateMock->shouldReceive('getCategoriesRoot')->andReturn($categories);
+        $controller = $this->userController->edit($user->id);
+        $this->assertEquals('user.not-found', $controller->getName());
+        $this->assertArrayHasKey('categories', $controller->getData());
     }
 
     public function testUpdateHaveAvatar()
@@ -155,6 +179,19 @@ class UserControllerTest extends TestCase
         $this->userController->update($request, $user->id);
     }
 
+    public function testUpdateUserNotFound()
+    {
+        $user = factory(User::class)->make();
+        $user->id = 1;
+        $categories = factory(Category::class, 5)->make();
+        $this->userMock->shouldReceive('find')->andReturn(false);
+        $this->cateMock->shouldReceive('getCategoriesRoot')->andReturn($categories);
+        $request = new UpdateUserRequest();
+        $controller = $this->userController->update($request, $user->id);
+        $this->assertEquals('user.not-found', $controller->getName());
+        $this->assertArrayHasKey('categories', $controller->getData());
+    }
+
     public function testFollowUnAuthorized()
     {
         $user = factory(User::class)->make();
@@ -179,6 +216,19 @@ class UserControllerTest extends TestCase
         $this->assertEquals(route('users.show', ['user' => $user_follow->id]), $controller->getTargetUrl());
     }
 
+    public function testFollowUserNotFound()
+    {
+        $user = factory(User::class)->make();
+        $user->id = 1;
+        $categories = factory(Category::class, 5)->make();
+        $this->userMock->shouldReceive('find')->andReturn(false);
+        $this->cateMock->shouldReceive('getCategoriesRoot')->andReturn($categories);
+        $this->be($user);
+        $controller = $this->userController->follow($user->id);
+        $this->assertEquals('user.not-found', $controller->getName());
+        $this->assertArrayHasKey('categories', $controller->getData());
+    }
+
     public function testUnFollowUnAuthorized()
     {
         $user = factory(User::class)->make();
@@ -200,6 +250,19 @@ class UserControllerTest extends TestCase
         $this->userMock->shouldReceive('unfollow')->with($user, $user_follow->id);
         $controller = $this->userController->unfollow($user_follow->id);
         $this->assertEquals(route('users.show', ['user' => $user_follow->id]), $controller->getTargetUrl());
+    }
+
+    public function testUnFollowUserNotFound()
+    {
+        $user = factory(User::class)->make();
+        $user->id = 1;
+        $categories = factory(Category::class, 5)->make();
+        $this->userMock->shouldReceive('find')->andReturn(false);
+        $this->cateMock->shouldReceive('getCategoriesRoot')->andReturn($categories);
+        $this->be($user);
+        $controller = $this->userController->unfollow($user->id);
+        $this->assertEquals('user.not-found', $controller->getName());
+        $this->assertArrayHasKey('categories', $controller->getData());
     }
 
     public function testBuyCoin()

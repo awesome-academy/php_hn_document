@@ -7,6 +7,7 @@ use App\Repositories\BaseRepository;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Receipt;
+use Illuminate\Support\Facades\Auth;
 use Pusher\Pusher;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
@@ -118,5 +119,15 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         );
 
         $pusher->trigger('following-notification.' . $user->id, 'SendFollowing', $data);
+    }
+
+    public function markNotification($id)
+    {
+        return Auth::user()->unreadNotifications->where('data.id', $id)->markAsRead();
+    }
+
+    public function markAllNotification($user)
+    {
+        return $user->unreadNotifications()->update(['read_at' => now()]);
     }
 }
