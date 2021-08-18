@@ -12,10 +12,12 @@ use App\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Auth\Access\AuthorizationException;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\PaymentRequest;
+use App\Jobs\ProcessMail;
 use App\Mail\Receipt;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RemindStudent;
+use Illuminate\Support\Facades\Queue;
 
 class UserControllerTest extends TestCase
 {
@@ -290,11 +292,11 @@ class UserControllerTest extends TestCase
             'quantity' => $request->quantity,
             'user_id' => $user->id,
         ];
-        Mail::fake();
-        Mail::send(new Receipt($user, $receipt));
+        Queue::fake();
         $this->userMock->shouldReceive('update')->with($user->id, $coin);
         $this->userMock->shouldReceive('setReceipt')->with($receipt);
         $controller = $this->userController->payment($request, $user->id);
+        Queue::assertPushedWithoutChain(ProcessMail::class);
         $this->assertEquals(route('users.show', ['user' => $user->id]), $controller->getTargetUrl());
     }
 }
