@@ -16,6 +16,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 use Mockery as m;
 
@@ -202,6 +203,9 @@ class DocumentControllerTest extends TestCase
         $request->category = 1;
         $request->description = 'test description';
         $url = 'test.pdf';
+        $this->categoryMock
+            ->shouldReceive('find')
+            ->andReturn(new Category);
         $this->documentMock
             ->shouldReceive('saveFile')
             ->once()
@@ -221,6 +225,47 @@ class DocumentControllerTest extends TestCase
             'coin' => 10,
         ]);
         $result = $this->documentController->storeUpload($request);
+        $this->assertEquals(route('user.documents.upload'), $result->getTargetUrl());
+    }
+
+    public function testStoreUploadSuccessWithNewCategory()
+    {
+        Storage::fake('local');
+        $user = factory(User::class)->make();
+        $this->be($user);
+        $request = new DocumentRequest();
+        $request->name = 'test';
+        $file = UploadedFile::fake()->create('test.pdf')->store('pdfs');
+        $request->file = $file;
+        $request->category = Str::random(10);
+        $category = factory(Category::class)->make();
+        $request->description = 'test description';
+        $url = 'test.pdf';
+        $this->categoryMock
+            ->shouldReceive('find')
+            ->andReturn(null);
+        $this->categoryMock
+            ->shouldReceive('create')->with([
+                'name' => $request->category,
+            ])
+            ->andReturn($category);
+        $this->documentMock
+            ->shouldReceive('saveFile')
+            ->once()
+            ->andReturn($url);
+        $this->documentMock
+            ->shouldReceive('getPreviewImages')
+            ->once();
+        $this->documentMock->shouldReceive('create')->with([
+            'name' => $request->name,
+            'description' => $request->description,
+            'url' => $url,
+            'user_id' => $user->id,
+            'category_id' => $category->id,
+        ]);
+        $this->userMock->shouldReceive('update');
+        $result = $this->documentController->storeUpload($request);
+        Storage::disk('local')->assertExists($file);
         $this->assertEquals(route('user.documents.upload'), $result->getTargetUrl());
     }
 
