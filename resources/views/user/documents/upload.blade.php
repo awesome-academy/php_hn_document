@@ -1,6 +1,7 @@
 @extends('user.layouts.master')
 
 @section('css')
+    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/upload.css') }}">
 @endsection
 
@@ -64,14 +65,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">@lang('uploads.category'):</label>
-                                    <select class="form-control" name="category" id="category">
+                                    <select class="form-control select-category" name="category" id="category">
                                         <option value="">@lang('uploads.select_category')</option>
                                         @include('user.documents.category_options', ['level' => 0])
                                     </select>
-                                    <br>
-                                    <label for="">@lang('category.name'):</label>
-                                    <input name="newCategory" type="text" class="form-control" id="inputCategory"
-                                        placeholder="@lang('category.type_name')">
                                 </div>
                                 <div class="form-group">
                                     @error('name')
@@ -104,5 +101,6 @@
 @endsection
 
 @push('scripts')
+    <script type="text/javascript" src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/upload.js') }}"></script>
 @endpush

@@ -55,3 +55,7 @@ $(document).on('change', '#up', function () {
 $(".close").click(function () {
     $(".alert").slideUp();
 });
+
+$(".select-category").select2({
+    tags: true
+});

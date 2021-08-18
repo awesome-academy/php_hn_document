@@ -129,23 +129,22 @@ class DocumentController extends Controller
             return redirect()->route('user.documents.upload')->with('error', $message);
         } else {
             $file = $request->file('file');
-            $categoryId = ($request->category == '') ? config('uploads.category_root') : $request->category;
+            $category = ($request->category == '') ? config('uploads.category_root') : $request->category;
+            $isCategory = $this->categoryRepository->find($category);
             $url = $this->documentRepository->saveFile($file);
             $this->documentRepository->getPreviewImages($file, $request->name);
-            if ($request->newCategory) {
-                $parentCategory = $categoryId;
-                $category = $this->categoryRepository->create([
-                    'name' => $request->newCategory,
-                    'parent_id' => $parentCategory,
+            if (!$isCategory) {
+                $categoryNew = $this->categoryRepository->create([
+                    'name' => $category,
                 ]);
-                $categoryId = $category->id;
+                $category = $categoryNew->id;
             }
             $attributes = [
                 'name' => $request->name,
                 'description' => $request->description,
                 'url' => $url,
                 'user_id' => $user->id,
-                'category_id' => $categoryId,
+                'category_id' => $category,
             ];
             $this->documentRepository->create($attributes);
             $upload = $user->upload - 1;
